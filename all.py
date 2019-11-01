@@ -26,7 +26,7 @@ if __name__ == '__main__':
 	libs = filter(lambda fname: re.match(r'.*\.so$', fname), os.listdir('.'))
 
 	print('%s' % (data_pretty))
-	for lib in libs:
+	for lib in sorted(libs):
 		print(lib.ljust(32)+' ', end='')
 
 		instxt = disasm(lib, data_bytes)
