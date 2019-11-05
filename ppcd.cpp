@@ -79,7 +79,7 @@ static const char *regname[] = {
 // Illegal instruction.
 static void ill(void)
 {
-#if 1
+#if 0
     o->mnemonic[0] = o->operands[0] = '\0';
 #else
     strcpy(o->mnemonic, ".word");
