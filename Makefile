@@ -9,11 +9,11 @@ all: ppcd_powerpc_32.so ppcd_powerpc_64.so ppcd_gecko.so ppcd_broadway.so libopc
 #------------------------------------------------------------------------------
 # capstone
 #------------------------------------------------------------------------------
-capstone_ppc64.so: capstone_ppc64.cpp
-	g++ $(CPPFLAGS) -lcapstone -shared capstone_ppc64.cpp -o capstone_ppc64.so
+capstone_ppc64.so: capstone.cpp
+	g++ $(CPPFLAGS) -DPOWERPC_64 -lcapstone -shared capstone.cpp -o capstone_ppc64.so
 
-capstone_aarch64.so: capstone_aarch64.cpp
-	g++ $(CPPFLAGS) -lcapstone -shared capstone_aarch64.cpp -o capstone_aarch64.so
+capstone_aarch64.so: capstone.cpp
+	g++ $(CPPFLAGS) -DAARCH64 -lcapstone -shared capstone.cpp -o capstone_aarch64.so
 
 #------------------------------------------------------------------------------
 # ppcd

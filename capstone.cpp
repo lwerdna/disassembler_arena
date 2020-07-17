@@ -1,10 +1,20 @@
-/* */
+/* generic disassembler using capstone */
 #include <stdint.h>
 #include <string.h>
 
 /* capstone stuff /usr/local/include/capstone */
 #include <capstone/capstone.h>
 #include <capstone/ppc.h>
+
+#ifdef AARCH64
+cs_mode mode = (cs_mode)CS_MODE_LITTLE_ENDIAN; 
+cs_arch arch = (cs_arch)CS_ARCH_ARM64;
+#endif
+
+#ifdef POWERPC_64
+cs_mode mode = (cs_mode)(CS_MODE_64|CS_MODE_BIG_ENDIAN); 
+cs_arch arch = (cs_arch)CS_ARCH_PPC;
+#endif
 
 extern "C" int disassemble(uint32_t addr, uint8_t *data, int len, char *result)
 {
@@ -15,10 +25,9 @@ extern "C" int disassemble(uint32_t addr, uint8_t *data, int len, char *result)
 					cs_disasm() will allocate array of cs_insn here */
 	size_t nInstr; /* number of instructions disassembled
 					(number of cs_insn allocated) */
-
+	
 	/* initialize capstone handle */
-	cs_mode mode = (cs_mode) (CS_MODE_LITTLE_ENDIAN);
-	if(cs_open(CS_ARCH_ARM64, mode, &handle) != CS_ERR_OK) {
+	if(cs_open(arch, mode, &handle) != CS_ERR_OK) {
 		printf("ERROR: cs_open()\n");
 		goto cleanup;
 	}
@@ -26,7 +35,7 @@ extern "C" int disassemble(uint32_t addr, uint8_t *data, int len, char *result)
 	nInstr = cs_disasm(handle, data, len, addr, 1, &insn);
 
 	if(nInstr != 1) {
-		printf("ERROR: cs_disasm()\n");
+		//printf("ERROR: cs_disasm()\n");
 		goto cleanup;
 	}
 
