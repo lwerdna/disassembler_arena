@@ -117,3 +117,100 @@ int disasm_libopcodes(
 
 	return 0;
 }
+
+extern "C" int disassemble(uint32_t addr, uint8_t *data, int len, char *result)
+{
+	enum bfd_architecture arch;
+	int machine;
+
+	#if defined(X86)
+	arch = bfd_arch_i386;
+	machine = bfd_mach_i386_i386_intel_syntax;
+	#elif defined(X64)
+	arch = bfd_arch_i386;
+	machine = bfd_mach_x86_64_intel_syntax;
+	#elif defined(AARCH64)
+	arch = bfd_arch_powerpc;
+	machine = bfd_mach_ppc;
+	#elif defined(PPC)
+	arch = bfd_arch_powerpc;
+	machine = bfd_mach_ppc;
+	#elif defined(PPC64)
+	arch = bfd_arch_powerpc;
+	machine = bfd_mach_ppc64;
+	#elif defined(PPC_403)
+	arch = bfd_arch_powerpc;
+	machine = bfd_mach_ppc_403;
+	#elif defined(PPC_403GC)
+	arch = bfd_arch_powerpc;
+	machine = bfd_mach_ppc_403gc;
+	#elif defined(PPC_405)
+	arch = bfd_arch_powerpc;
+	machine = bfd_mach_ppc_405;
+	#elif defined(PPC_505)
+	arch = bfd_arch_powerpc;
+	machine = bfd_mach_ppc_505;
+	#elif defined(PPC_601)
+	arch = bfd_arch_powerpc;
+	machine = bfd_mach_ppc_601;
+	#elif defined(PPC_602)
+	arch = bfd_arch_powerpc;
+	machine = bfd_mach_ppc_602;
+	#elif defined(PPC_603)
+	arch = bfd_arch_powerpc;
+	machine = bfd_mach_ppc_603;
+	#elif defined(PPC_EC603E)
+	arch = bfd_arch_powerpc;
+	machine = bfd_mach_ppc_ec603e;
+	#elif defined(PPC_604)
+	arch = bfd_arch_powerpc;
+	machine = bfd_mach_ppc_604;
+	#elif defined(PPC_620)
+	arch = bfd_arch_powerpc;
+	machine = bfd_mach_ppc_620;
+	#elif defined(PPC_630)
+	arch = bfd_arch_powerpc;
+	machine = bfd_mach_ppc_630;
+	#elif defined(PPC_750)
+	arch = bfd_arch_powerpc;
+	machine = bfd_mach_ppc_750;
+	#elif defined(PPC_860)
+	arch = bfd_arch_powerpc;
+	machine = bfd_mach_ppc_860;
+	#elif defined(PPC_A35)
+	arch = bfd_arch_powerpc;
+	machine = bfd_mach_ppc_a35;
+	#elif defined(PPC_RS64II)
+	arch = bfd_arch_powerpc;
+	machine = bfd_mach_ppc_rs64ii;
+	#elif defined(PPC_RS64III)
+	arch = bfd_arch_powerpc;
+	machine = bfd_mach_ppc_rs64iii;
+	#elif defined(PPC_7400)
+	arch = bfd_arch_powerpc;
+	machine = bfd_mach_ppc_7400;
+	#elif defined(PPC_E500)
+	arch = bfd_arch_powerpc;
+	machine = bfd_mach_ppc_e500;
+	#elif defined(PPC_E500MC)
+	arch = bfd_arch_powerpc;
+	machine = bfd_mach_ppc_e500mc;
+	#elif defined(PPC_E500MC64)
+	arch = bfd_arch_powerpc;
+	machine = bfd_mach_ppc_e500mc64;
+	#elif defined(PPC_E5500)
+	arch = bfd_arch_powerpc;
+	machine = bfd_mach_ppc_e5500;
+	#elif defined(PPC_E6500)
+	arch = bfd_arch_powerpc;
+	machine = bfd_mach_ppc_e6500;
+	#elif defined(PPC_TITAN)
+	arch = bfd_arch_powerpc;
+	machine = bfd_mach_ppc_titan;
+	#elif defined(PPC_VLE)
+	arch = bfd_arch_powerpc;
+	machine = bfd_mach_ppc_vle;
+	#endif
+
+	return disasm_libopcodes(bfd_arch_powerpc, machine, addr, data, len, result);
+}
