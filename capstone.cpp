@@ -16,42 +16,53 @@ cs_mode mode = (cs_mode)(CS_MODE_64|CS_MODE_BIG_ENDIAN);
 cs_arch arch = (cs_arch)CS_ARCH_PPC;
 #endif
 
-extern "C" int disassemble(uint32_t addr, uint8_t *data, int len, char *result)
+extern "C" int disassemble(uint32_t addr_, uint8_t *data, int len, char *result)
 {
 	int rc = -1;
 
-	csh handle = 0; /* capstone handle is typedef'd size_t */
-	cs_insn *insn; /* detailed instruction information 
-					cs_disasm() will allocate array of cs_insn here */
-	size_t nInstr; /* number of instructions disassembled
-					(number of cs_insn allocated) */
-	
-	/* initialize capstone handle */
-	if(cs_open(arch, mode, &handle) != CS_ERR_OK) {
-		printf("ERROR: cs_open()\n");
-		goto cleanup;
+	/* one-time capstone init stuff */
+	static bool init = false;
+	static csh handle = 0;
+	static cs_insn *insn = NULL;
+	if (!init) {
+		if(cs_open(arch, mode, &handle) != CS_ERR_OK) {
+			printf("ERROR: cs_open()\n");
+			exit(-1);
+		}
+		insn = cs_malloc(handle);
+		init = true;
 	}
 
-	nInstr = cs_disasm(handle, data, len, addr, 1, &insn);
+	/* actually disassemble */
+	uint64_t addr = addr_;
+	size_t size = 4;
+	const uint8_t *pinsword = data;
 
-	if(nInstr != 1) {
-		//printf("ERROR: cs_disasm()\n");
-		goto cleanup;
+	size_t count = cs_disasm_iter(handle, &pinsword, &size, &addr, insn);
+	if(count != 1) {
+		if(cs_errno(handle) == CS_ERR_OK) {
+			if(result)
+				strcpy(result, "undef");
+		}
+		else {
+			//printf("ERROR: cs_disasm_iter()\n");
+			if(result)
+				strcpy(result, "error");
+			while(0);
+		}
+	}
+	else {
+		if(result) {
+			strcpy(result, insn->mnemonic);
+			if(insn->op_str[0]) {
+				strcat(result, " ");
+				strcat(result, insn->op_str);
+			}
+		}
+
+		rc = 0;
 	}
 
-	/* capstone struct -> string */
-	strcpy(result, insn->mnemonic);
-	if(insn->op_str[0]) {
-		strcat(result, " ");
-		strcat(result, insn->op_str);
-	}
-
-	cs_free(insn, nInstr);
-		
-	rc = 0;
-	cleanup:
-	if(handle)
-		cs_close(&handle);
 	return rc;
 }
 
