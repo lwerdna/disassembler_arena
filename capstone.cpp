@@ -16,6 +16,16 @@ cs_mode mode = (cs_mode)(CS_MODE_64|CS_MODE_BIG_ENDIAN);
 cs_arch arch = (cs_arch)CS_ARCH_PPC;
 #endif
 
+#ifdef X86
+cs_mode mode = (cs_mode)(CS_MODE_32);
+cs_arch arch = (cs_arch)CS_ARCH_X86;
+#endif
+
+#ifdef X64
+cs_mode mode = (cs_mode)(CS_MODE_64);
+cs_arch arch = (cs_arch)CS_ARCH_X86;
+#endif
+
 extern "C" int disassemble(uint32_t addr_, uint8_t *data, int len, char *result)
 {
 	int rc = -1;

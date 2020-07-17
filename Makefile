@@ -4,7 +4,7 @@ BFDFLAGS = -lbfd -liberty -lopcodes -lz
 
 .PHONY: all
 
-all: ppcd_powerpc_32.so ppcd_powerpc_64.so ppcd_gecko.so ppcd_broadway.so libopcodes.o libopcodes_ppc.so libopcodes_ppc64.so libopcodes_ppc_403.so libopcodes_ppc_403gc.so libopcodes_ppc_405.so libopcodes_ppc_505.so libopcodes_ppc_601.so libopcodes_ppc_602.so libopcodes_ppc_603.so libopcodes_ppc_ec603e.so libopcodes_ppc_604.so libopcodes_ppc_620.so libopcodes_ppc_630.so libopcodes_ppc_750.so libopcodes_ppc_860.so libopcodes_ppc_a35.so libopcodes_ppc_rs64ii.so libopcodes_ppc_rs64iii.so libopcodes_ppc_7400.so libopcodes_ppc_e500.so libopcodes_ppc_e500mc.so libopcodes_ppc_e500mc64.so libopcodes_ppc_e5500.so libopcodes_ppc_e6500.so libopcodes_ppc_titan.so libopcodes_ppc_vle.so libopcodes_aarch64.so capstone_ppc64.so capstone_aarch64.so
+all: ppcd_powerpc_32.so ppcd_powerpc_64.so ppcd_gecko.so ppcd_broadway.so libopcodes.o libopcodes_ppc.so libopcodes_ppc64.so libopcodes_ppc_403.so libopcodes_ppc_403gc.so libopcodes_ppc_405.so libopcodes_ppc_505.so libopcodes_ppc_601.so libopcodes_ppc_602.so libopcodes_ppc_603.so libopcodes_ppc_ec603e.so libopcodes_ppc_604.so libopcodes_ppc_620.so libopcodes_ppc_630.so libopcodes_ppc_750.so libopcodes_ppc_860.so libopcodes_ppc_a35.so libopcodes_ppc_rs64ii.so libopcodes_ppc_rs64iii.so libopcodes_ppc_7400.so libopcodes_ppc_e500.so libopcodes_ppc_e500mc.so libopcodes_ppc_e500mc64.so libopcodes_ppc_e5500.so libopcodes_ppc_e6500.so libopcodes_ppc_titan.so libopcodes_ppc_vle.so libopcodes_aarch64.so capstone_ppc64.so capstone_aarch64.so capstone_x86.so capstone_x64.so
 
 #------------------------------------------------------------------------------
 # capstone
@@ -14,6 +14,12 @@ capstone_ppc64.so: capstone.cpp
 
 capstone_aarch64.so: capstone.cpp
 	g++ $(CPPFLAGS) -DAARCH64 -lcapstone -shared capstone.cpp -o capstone_aarch64.so
+
+capstone_x86.so: capstone.cpp
+	g++ $(CPPFLAGS) -DX86 -lcapstone -shared capstone.cpp -o capstone_x86.so
+
+capstone_x64.so: capstone.cpp
+	g++ $(CPPFLAGS) -DX64 -lcapstone -shared capstone.cpp -o capstone_x64.so
 
 #------------------------------------------------------------------------------
 # ppcd
