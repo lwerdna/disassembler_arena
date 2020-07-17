@@ -17,17 +17,16 @@ extern "C" int disassemble(uint32_t addr, uint8_t *data, int len, char *result)
 					(number of cs_insn allocated) */
 
 	/* initialize capstone handle */
-	cs_mode mode = (cs_mode) (CS_MODE_64 | CS_MODE_BIG_ENDIAN);
-	int cs_ret = cs_open(CS_ARCH_PPC, mode, &handle);
-	if(cs_ret != CS_ERR_OK) {
-		printf("ERROR: cs_open() returned %d\n", cs_ret);
+	cs_mode mode = (cs_mode) (CS_MODE_LITTLE_ENDIAN);
+	if(cs_open(CS_ARCH_ARM64, mode, &handle) != CS_ERR_OK) {
+		printf("ERROR: cs_open()\n");
 		goto cleanup;
 	}
 
 	nInstr = cs_disasm(handle, data, len, addr, 1, &insn);
 
 	if(nInstr != 1) {
-		//printf("ERROR: cs_disasm()\n");
+		printf("ERROR: cs_disasm()\n");
 		goto cleanup;
 	}
 

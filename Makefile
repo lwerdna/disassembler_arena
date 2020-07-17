@@ -4,13 +4,16 @@ BFDFLAGS = -lbfd -liberty -lopcodes -lz
 
 .PHONY: all
 
-all: ppcd_powerpc_32.so ppcd_powerpc_64.so ppcd_gecko.so ppcd_broadway.so libopcodes.o libopcodes_ppc.so libopcodes_ppc64.so libopcodes_ppc_403.so libopcodes_ppc_403gc.so libopcodes_ppc_405.so libopcodes_ppc_505.so libopcodes_ppc_601.so libopcodes_ppc_602.so libopcodes_ppc_603.so libopcodes_ppc_ec603e.so libopcodes_ppc_604.so libopcodes_ppc_620.so libopcodes_ppc_630.so libopcodes_ppc_750.so libopcodes_ppc_860.so libopcodes_ppc_a35.so libopcodes_ppc_rs64ii.so libopcodes_ppc_rs64iii.so libopcodes_ppc_7400.so libopcodes_ppc_e500.so libopcodes_ppc_e500mc.so libopcodes_ppc_e500mc64.so libopcodes_ppc_e5500.so libopcodes_ppc_e6500.so libopcodes_ppc_titan.so libopcodes_ppc_vle.so capstone_ppc64.so
+all: ppcd_powerpc_32.so ppcd_powerpc_64.so ppcd_gecko.so ppcd_broadway.so libopcodes.o libopcodes_ppc.so libopcodes_ppc64.so libopcodes_ppc_403.so libopcodes_ppc_403gc.so libopcodes_ppc_405.so libopcodes_ppc_505.so libopcodes_ppc_601.so libopcodes_ppc_602.so libopcodes_ppc_603.so libopcodes_ppc_ec603e.so libopcodes_ppc_604.so libopcodes_ppc_620.so libopcodes_ppc_630.so libopcodes_ppc_750.so libopcodes_ppc_860.so libopcodes_ppc_a35.so libopcodes_ppc_rs64ii.so libopcodes_ppc_rs64iii.so libopcodes_ppc_7400.so libopcodes_ppc_e500.so libopcodes_ppc_e500mc.so libopcodes_ppc_e500mc64.so libopcodes_ppc_e5500.so libopcodes_ppc_e6500.so libopcodes_ppc_titan.so libopcodes_ppc_vle.so libopcodes_aarch64.so capstone_ppc64.so capstone_aarch64.so
 
 #------------------------------------------------------------------------------
 # capstone
 #------------------------------------------------------------------------------
 capstone_ppc64.so: capstone_ppc64.cpp
 	g++ $(CPPFLAGS) -lcapstone -shared capstone_ppc64.cpp -o capstone_ppc64.so
+
+capstone_aarch64.so: capstone_aarch64.cpp
+	g++ $(CPPFLAGS) -lcapstone -shared capstone_aarch64.cpp -o capstone_aarch64.so
 
 #------------------------------------------------------------------------------
 # ppcd
@@ -28,7 +31,7 @@ ppcd_broadway.so: ppcd_main.cpp ppcd.cpp ppcd.h
 	g++ $(CPPFLAGS) -DBROADWAY -shared ppcd.cpp ppcd_main.cpp -o ppcd_broadway.so
 
 #------------------------------------------------------------------------------
-# libbfd/libopcodes ppc
+# libbfd/libopcodes
 #------------------------------------------------------------------------------
 libopcodes.o: libopcodes.cpp
 	g++ -c $(CPPFLAGS) libopcodes.cpp -o libopcodes.o
@@ -110,6 +113,9 @@ libopcodes_ppc_titan.so: libopcodes_ppc.cpp libopcodes.o
 
 libopcodes_ppc_vle.so: libopcodes_ppc.cpp libopcodes.o
 	g++ $(CPPFLAGS) $(BFDFLAGS) -DPPC_VLE -shared -o libopcodes_ppc_vle.so libopcodes_ppc.cpp libopcodes.o
+
+libopcodes_aarch64.so: libopcodes_aarch64.cpp libopcodes.o
+	g++ $(CPPFLAGS) $(BFDFLAGS) -shared -o libopcodes_aarch64.so libopcodes_aarch64.cpp libopcodes.o
 
 clean:
 	rm -rf *.so *.o *.dSYM

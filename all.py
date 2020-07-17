@@ -8,10 +8,10 @@ import ctypes
 
 def disasm(sopath, data, addr=0):
 	# initialize disassembler, if necessary
-	gofer = ctypes.CDLL(sopath)
+	dll = ctypes.CDLL(sopath)
 	cbuf = ctypes.create_string_buffer(256)
 
-	gofer.disassemble(addr, data, len(data), ctypes.byref(cbuf))
+	dll.disassemble(addr, data, len(data), ctypes.byref(cbuf))
 	return cbuf.value.decode('utf-8')
 	return tmp
 
