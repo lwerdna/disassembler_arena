@@ -79,7 +79,12 @@ int disasm_libopcodes(
 		dinfo.flavour = bfd_target_unknown_flavour;
 		dinfo.arch = arch;
 		dinfo.mach = mach;
-		dinfo.endian = BFD_ENDIAN_BIG;
+		if(arch == bfd_arch_aarch64) {
+			dinfo.endian = BFD_ENDIAN_LITTLE;
+		}
+		else {
+			dinfo.endian = BFD_ENDIAN_BIG;
+		}
 		disassemble_init_for_target(&dinfo); // reads dinfo.arch and populate extra stuff
 		am2di[amp] = dinfo;
 
@@ -130,8 +135,8 @@ extern "C" int disassemble(uint32_t addr, uint8_t *data, int len, char *result)
 	arch = bfd_arch_i386;
 	machine = bfd_mach_x86_64_intel_syntax;
 	#elif defined(AARCH64)
-	arch = bfd_arch_powerpc;
-	machine = bfd_mach_ppc;
+	arch = bfd_arch_aarch64;
+	machine = bfd_mach_aarch64;
 	#elif defined(PPC)
 	arch = bfd_arch_powerpc;
 	machine = bfd_mach_ppc;
@@ -212,5 +217,5 @@ extern "C" int disassemble(uint32_t addr, uint8_t *data, int len, char *result)
 	machine = bfd_mach_ppc_vle;
 	#endif
 
-	return disasm_libopcodes(bfd_arch_powerpc, machine, addr, data, len, result);
+	return disasm_libopcodes(arch, machine, addr, data, len, result);
 }
