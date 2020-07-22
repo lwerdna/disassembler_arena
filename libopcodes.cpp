@@ -134,12 +134,60 @@ extern "C" int disassemble(uint32_t addr, uint8_t *data, int len, char *result)
 	#elif defined(X64)
 	arch = bfd_arch_i386;
 	machine = bfd_mach_x86_64_intel_syntax;
-	#elif defined(ARM)
+
+
+	#elif defined(ARM_UNKNOWN)
 	arch = bfd_arch_arm;
 	machine = bfd_mach_arm_unknown;
+	#elif defined(ARM_2)
+	arch = bfd_arch_arm;
+	machine = bfd_mach_arm_2;
+	#elif defined(ARM_2a)
+	arch = bfd_arch_arm;
+	machine = bfd_mach_arm_2a;
+	#elif defined(ARM_3)
+	arch = bfd_arch_arm;
+	machine = bfd_mach_arm_3;
+	#elif defined(ARM_3M)
+	arch = bfd_arch_arm;
+	machine = bfd_mach_arm_3M;
+	#elif defined(ARM_4)
+	arch = bfd_arch_arm;
+	machine = bfd_mach_arm_4;
+	#elif defined(ARM_4T)
+	arch = bfd_arch_arm;
+	machine = bfd_mach_arm_4T;
+	#elif defined(ARM_5)
+	arch = bfd_arch_arm;
+	machine = bfd_mach_arm_5;
+	#elif defined(ARM_5T)
+	arch = bfd_arch_arm;
+	machine = bfd_mach_arm_5T;
+	#elif defined(ARM_5TE)
+	arch = bfd_arch_arm;
+	machine = bfd_mach_arm_5TE;
+	#elif defined(ARM_XSCALE)
+	arch = bfd_arch_arm;
+	machine = bfd_mach_arm_XScale;
+	#elif defined(ARM_EP9312)
+	arch = bfd_arch_arm;
+	machine = bfd_mach_arm_ep9312;
+	#elif defined(ARM_IWMMXT)
+	arch = bfd_arch_arm;
+	machine = bfd_mach_arm_iWMMXt;
+	#elif defined(ARM_IWMMXT2)
+	arch = bfd_arch_arm;
+	machine = bfd_mach_arm_iWMMXt2;
+
+
 	#elif defined(AARCH64)
 	arch = bfd_arch_aarch64;
 	machine = bfd_mach_aarch64;
+	#elif defined(AARCH64_ILP32)
+	arch = bfd_arch_aarch64;
+	machine = bfd_mach_aarch64_ilp32;
+
+
 	#elif defined(PPC)
 	arch = bfd_arch_powerpc;
 	machine = bfd_mach_ppc;
