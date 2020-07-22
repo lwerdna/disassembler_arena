@@ -27,7 +27,7 @@ if __name__ == '__main__':
 
 	print('%s' % (data_pretty))
 	for lib in sorted(libs):
-		print(lib.ljust(32)+' ', end='')
+		print(lib.ljust(32)+' ', end='', flush=True)
 
 		instxt = disasm(lib, data_bytes)
 		print('%s: %s' % (data_pretty, instxt))

@@ -6,13 +6,40 @@
 #include <capstone/capstone.h>
 #include <capstone/ppc.h>
 
+/* see test_mc.py from the capstone suite */
+
+#ifdef ARM
+cs_arch arch = (cs_arch)CS_ARCH_ARM;
+cs_mode mode = (cs_mode)(CS_MODE_BIG_ENDIAN | CS_MODE_ARM);
+#endif
+
+	#ifdef ARM_V8
+	cs_arch arch = (cs_arch)CS_ARCH_ARM;
+	cs_mode mode = (cs_mode)(CS_MODE_BIG_ENDIAN | CS_MODE_V8);
+	#endif
+
+#ifdef ARM_THUMB
+cs_arch arch = (cs_arch)CS_ARCH_ARM;
+cs_mode mode = (cs_mode)(CS_MODE_BIG_ENDIAN | CS_MODE_THUMB);
+#endif
+
+	#ifdef ARM_THUMB_MCLASS
+	cs_arch arch = (cs_arch)CS_ARCH_ARM;
+	cs_mode mode = (cs_mode)(CS_MODE_BIG_ENDIAN | CS_MODE_THUMB | CS_MODE_MCLASS);
+	#endif
+
+		#ifdef ARM_THUMB_MCLASS_V8
+		cs_arch arch = (cs_arch)CS_ARCH_ARM;
+		cs_mode mode = (cs_mode)(CS_MODE_BIG_ENDIAN | CS_MODE_THUMB | CS_MODE_MCLASS | CS_MODE_V8);
+		#endif
+
 #ifdef AARCH64
-cs_mode mode = (cs_mode)CS_MODE_LITTLE_ENDIAN; 
 cs_arch arch = (cs_arch)CS_ARCH_ARM64;
+cs_mode mode = (cs_mode)(CS_MODE_BIG_ENDIAN);
 #endif
 
 #ifdef POWERPC_64
-cs_mode mode = (cs_mode)(CS_MODE_64|CS_MODE_BIG_ENDIAN); 
+cs_mode mode = (cs_mode)(CS_MODE_64|CS_MODE_BIG_ENDIAN);
 cs_arch arch = (cs_arch)CS_ARCH_PPC;
 #endif
 

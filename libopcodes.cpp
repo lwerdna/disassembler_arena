@@ -98,8 +98,8 @@ int disasm_libopcodes(
 		am2df[amp] = disasm;
 	}
 
-	disassemble_info dinfo = am2di[amp];	
-	disassembler_ftype disasm = am2df[amp];	
+	disassemble_info dinfo = am2di[amp];
+	disassembler_ftype disasm = am2df[amp];
 
 	/* use the stream pointer as our private data
 		(the buffer that fprintf() should append to) */
@@ -134,6 +134,9 @@ extern "C" int disassemble(uint32_t addr, uint8_t *data, int len, char *result)
 	#elif defined(X64)
 	arch = bfd_arch_i386;
 	machine = bfd_mach_x86_64_intel_syntax;
+	#elif defined(ARM)
+	arch = bfd_arch_arm;
+	machine = bfd_mach_arm_unknown;
 	#elif defined(AARCH64)
 	arch = bfd_arch_aarch64;
 	machine = bfd_mach_aarch64;
