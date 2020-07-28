@@ -16,7 +16,17 @@ using namespace std;
 #include <dis-asm.h>
 
 /*****************************************************************************/
-/* disassembler string making callback */
+/* utilities */
+/*****************************************************************************/
+void uint32_t_swap(void *vp)
+{
+	uint8_t tmp, *bp=(uint8_t *)vp;
+	tmp = bp[0]; bp[0] = bp[3]; bp[3] = tmp;
+	tmp = bp[1]; bp[1] = bp[2]; bp[2] = tmp;
+}
+
+/*****************************************************************************/
+/* disassembler callbacks */
 /*****************************************************************************/
 int cb_fprintf(void *stream, const char *fmt, ...)
 {
@@ -29,6 +39,25 @@ int cb_fprintf(void *stream, const char *fmt, ...)
     strcat((char *)built_str, buf);
     return rc;
 };
+
+/* overrides struct disassemble_info .read_memory_func,
+	by default it's buffer_read_memory */
+int read_memory_dword_swap(bfd_vma memaddr, bfd_byte *myaddr, unsigned int length,
+	struct disassemble_info *dinfo)
+{
+	//printf("custom_read_memory(addr=0x%lX, length=%d)\n", memaddr, length);
+	//printf("source_bytes: %02X %02X %02X %02X\n", source_bytes[0], source_bytes[1], source_bytes[2], source_bytes[3]);
+
+	/* we stuffed this here during disassembler setup */
+	uint8_t *source_bytes = (uint8_t *)dinfo->private_data;
+
+	memcpy(myaddr, source_bytes, length);
+
+	for(int i=0; i<length; i+=4)
+		uint32_t_swap(myaddr+i);
+
+	return 0;
+}
 
 /*****************************************************************************/
 /* architecture/machine pairs to track libopcodes disassemblers */
@@ -71,16 +100,31 @@ int disasm_libopcodes(
 	//printf("using addr: %d\n", addr);
 	//printf("using  len: %d\n", len);
 	//printf("   insword: 0x%08X\n", insword);
+	//printf("      data: %02X %02X %02X %02X...\n", data[0], data[1], data[2], data[3]);
 
 	if(am2di.find(amp) == am2di.end()) {
-		/* create disassemble info */
+		/* create disassemble info, see <binutils>/include/dis-asm.h */
 		struct disassemble_info dinfo = {0};
+
+		/* defaults, see <binutils>/opcodes/dis-init.c */
 		init_disassemble_info(&dinfo, NULL, cb_fprintf);
-		dinfo.flavour = bfd_target_unknown_flavour;
 		dinfo.arch = arch;
 		dinfo.mach = mach;
 		dinfo.endian = BFD_ENDIAN_BIG;
-		disassemble_init_for_target(&dinfo); // reads dinfo.arch and populate extra stuff
+		dinfo.endian_code = BFD_ENDIAN_BIG;
+		dinfo.display_endian = BFD_ENDIAN_BIG;
+
+		/* read dinfo.arch and populate further defaults, see <binutils>/opcodes/disassemble.c */
+		disassemble_init_for_target(&dinfo);
+		/* WORKAROUND: aarch64 is always little endian to libopcodes,
+			see <binutils>/opcodes/aarch64-dis.c for hardcode set to BFD_ENDIAN_LITTLE
+			need custom memory reader to get big endian from aarch64 */
+		if(dinfo.arch==bfd_arch_aarch64 && dinfo.endian==BFD_ENDIAN_BIG) {
+			dinfo.private_data = data;
+			dinfo.read_memory_func = read_memory_dword_swap;
+		}
+
+		/* store in lookup */
 		am2di[amp] = dinfo;
 
 		/* create disassembler */
@@ -96,8 +140,7 @@ int disasm_libopcodes(
 	disassemble_info dinfo = am2di[amp];
 	disassembler_ftype disasm = am2df[amp];
 
-	/* use the stream pointer as our private data
-		(the buffer that fprintf() should append to) */
+	/* use the stream pointer to store buffer that fprintf() should append to */
 	dinfo.stream = (void *)result;
 
 	/* call disassembler
@@ -111,6 +154,10 @@ int disasm_libopcodes(
 	/* source data */
 	dinfo.buffer = data;
 	dinfo.buffer_length = len;
+
+	/* also store source data in .private_data in case custom .read_memory_func
+		needs to access it */
+	dinfo.private_data = data;
 
 	result[0] = '\0';
 	disasm((bfd_vma)addr, &dinfo);

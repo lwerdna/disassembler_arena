@@ -34,6 +34,5 @@ if __name__ == '__main__':
 	print('%s' % (data_pretty))
 	for lib in sorted(libs):
 		print(lib.ljust(32)+' ', end='', flush=True)
-
 		print(('%s: %s' % (data_pretty, disasm(lib, data_bytes).rstrip())).ljust(40), end='')
 		print(('%s: %s' % (data_pretty_, disasm(lib, data_bytes_).rstrip())))
