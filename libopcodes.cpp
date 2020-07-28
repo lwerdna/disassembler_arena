@@ -79,12 +79,7 @@ int disasm_libopcodes(
 		dinfo.flavour = bfd_target_unknown_flavour;
 		dinfo.arch = arch;
 		dinfo.mach = mach;
-		if(arch == bfd_arch_aarch64) {
-			dinfo.endian = BFD_ENDIAN_LITTLE;
-		}
-		else {
-			dinfo.endian = BFD_ENDIAN_BIG;
-		}
+		dinfo.endian = BFD_ENDIAN_BIG;
 		disassemble_init_for_target(&dinfo); // reads dinfo.arch and populate extra stuff
 		am2di[amp] = dinfo;
 

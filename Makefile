@@ -4,22 +4,32 @@ BFDFLAGS = -lbfd -liberty -lopcodes -lz
 
 .PHONY: all
 
-TARGETS =
 # ppcd
-#TARGETS += ppcd_powerpc_32.so ppcd_powerpc_64.so ppcd_gecko.so ppcd_broadway.so
+TARGETS_PPCD_PPC = ppcd_powerpc_32.so ppcd_powerpc_64.so ppcd_gecko.so ppcd_broadway.so
 
 # libopcodes
-TARGETS += libopcodes_x86.so libopcodes_x64.so
-TARGETS += libopcodes_arm_unknown.so libopcodes_arm_2.so libopcodes_arm_2a.so libopcodes_arm_3.so libopcodes_arm_3m.so libopcodes_arm_4.so libopcodes_arm_4t.so libopcodes_arm_5.so libopcodes_arm_5t.so libopcodes_arm_5te.so libopcodes_arm_xscale.so libopcodes_arm_ep9312.so libopcodes_arm_iwmmxt.so libopcodes_arm_iwmmxt2.so
-TARGETS += libopcodes_aarch64.so libopcodes_aarch64_ilp32.so
-#TARGETS += libopcodes_ppc.so libopcodes_ppc64.so libopcodes_ppc_403.so libopcodes_ppc_403gc.so libopcodes_ppc_405.so libopcodes_ppc_505.so libopcodes_ppc_601.so libopcodes_ppc_602.so libopcodes_ppc_603.so libopcodes_ppc_ec603e.so libopcodes_ppc_604.so libopcodes_ppc_620.so libopcodes_ppc_630.so libopcodes_ppc_750.so libopcodes_ppc_860.so libopcodes_ppc_a35.so libopcodes_ppc_rs64ii.so libopcodes_ppc_rs64iii.so libopcodes_ppc_7400.so libopcodes_ppc_e500.so libopcodes_ppc_e500mc.so libopcodes_ppc_e500mc64.so libopcodes_ppc_e5500.so libopcodes_ppc_e6500.so libopcodes_ppc_titan.so libopcodes_ppc_vle.so
+TARGETS_LIBOPCODES_INTEL = libopcodes_x86.so libopcodes_x64.so
+TARGETS_LIBOPCODES_ARM = libopcodes_arm_unknown.so libopcodes_arm_2.so libopcodes_arm_2a.so libopcodes_arm_3.so libopcodes_arm_3m.so libopcodes_arm_4.so libopcodes_arm_4t.so libopcodes_arm_5.so libopcodes_arm_5t.so libopcodes_arm_5te.so libopcodes_arm_xscale.so libopcodes_arm_ep9312.so libopcodes_arm_iwmmxt.so libopcodes_arm_iwmmxt2.so
+TARGETS_LIBOPCODES_AARCH64 = libopcodes_aarch64.so libopcodes_aarch64_ilp32.so
+TARGETS_CAPSTONE_PPC = libopcodes_ppc.so libopcodes_ppc64.so libopcodes_ppc_403.so libopcodes_ppc_403gc.so libopcodes_ppc_405.so libopcodes_ppc_505.so libopcodes_ppc_601.so libopcodes_ppc_602.so libopcodes_ppc_603.so libopcodes_ppc_ec603e.so libopcodes_ppc_604.so libopcodes_ppc_620.so libopcodes_ppc_630.so libopcodes_ppc_750.so libopcodes_ppc_860.so libopcodes_ppc_a35.so libopcodes_ppc_rs64ii.so libopcodes_ppc_rs64iii.so libopcodes_ppc_7400.so libopcodes_ppc_e500.so libopcodes_ppc_e500mc.so libopcodes_ppc_e500mc64.so libopcodes_ppc_e5500.so libopcodes_ppc_e6500.so libopcodes_ppc_titan.so libopcodes_ppc_vle.so
 
 # capstone
-TARGETS += capstone_x86.so capstone_x64.so
-TARGETS += capstone_arm.so capstone_arm_v8.so capstone_arm_thumb.so capstone_arm_thumb_mclass.so capstone_arm_thumb_mclass_v8.so capstone_aarch64.so
-#TARGETS += capstone_ppc64.so
+TARGETS_CAPSTONE_INTEL = capstone_x86.so capstone_x64.so
+TARGETS_CAPSTONE_ARM = capstone_arm.so capstone_arm_v8.so capstone_arm_thumb.so capstone_arm_thumb_mclass.so capstone_arm_thumb_mclass_v8.so capstone_aarch64.so
+TARGETS_CAPSTONE_AARCH64 = capstone_aarch64.so
+TARGETS_CAPSTONE_PPC = capstone_ppc64.so
 
-all: $(TARGETS)
+TARGETS_AARCH64 = $(TARGETS_LIBOPCODES_AARCH64) $(TARGETS_CAPSTONE_AARCH64)
+TARGETS_INTEL = $(TARGETS_LIBOPCODES_INTEL) $(TARGETS_CAPSTONE_INTEL)
+TARGETS_PPC = $(TARGETS_PPCD_PPC) $(TARGETS_LIBOPCODES_PPC) $(TARGETS_CAPSTONE_PPC)
+
+aarch64: $(TARGETS_AARCH64)
+
+intel: $(TARGETS_INTEL)
+
+ppc: $(TARGETS_PPC)
+
+all: $(TARGETS_AARCH64) $(TARGETS_INTEL) $(TARGETS_PPC)
 
 clean:
 	rm -rf *.so *.o *.dSYM
