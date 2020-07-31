@@ -16,6 +16,7 @@ def disasm(sopath, data, addr=0):
 		tmp = '(error)'
 	else:
 		tmp = cbuf.value.decode('utf-8')
+		tmp = tmp.strip()
 		tmp = tmp.replace('\t', ' ')
 	return tmp
 

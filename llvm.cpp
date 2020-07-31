@@ -43,16 +43,7 @@ using namespace std;
 #include <llvm/Support/TargetSelect.h>
 #include <llvm/Support/ToolOutputFile.h>
 
-#define DIALECT_ATT 0
-#define DIALECT_INTEL 1
-
-/* autils */
-extern "C" {
-#include <autils/output.h>
-}
-
-/* local includes */
-#include "llvm_svcs.h"
+#include "utils.h"
 
 /*****************************************************************************/
 /* MISCELLANY */
@@ -219,7 +210,7 @@ extern "C" int test_triplet(char *triplet)
 		LLVMDisasmDispose(context);
 		return 0;
 	}
-		
+
 	return -1;
 }
 
@@ -234,11 +225,11 @@ extern "C" int disassemble(uint32_t addr, uint8_t *data, int len, char *result)
 	/* do NOT seek arch features by changing the arch part of triplet (eg: aarch64 -> aarch64-v8)
 		instead, use aarch64, and specify features */
 
-	/* aarch64 features as of 10.0.1: 
+	/* aarch64 features as of 10.0.1:
 		bti, ccdp, crc, crypto, dotprod, fp16fml, fparmv8, fullfp16,
 		mte, neon, predres, rand, ras, rcpc, sb, sha3, sm4, spe,
-		specrestrict, ssbs, tme, v8.1a, v8.2a, v8.3a, v8.4a, v8.5a 
-	
+		specrestrict, ssbs, tme, v8.1a, v8.2a, v8.3a, v8.4a, v8.5a
+
 		llvm
 		feature
 		string   ARM      pcode            when
@@ -296,8 +287,12 @@ extern "C" int disassemble(uint32_t addr, uint8_t *data, int len, char *result)
 			goto cleanup;
 		}
 	}
-	
-	//printf("data: %02X %02X %02X %02X\n", data[0], data[1], data[2], data[3]);
+
+	/* llvm treats incoming data as little endian, and providing "aarch64_be" has no effect
+		so, falsely swap it to force into our big-endian convention */
+	//printf("before: %02X %02X %02X %02X\n", data[0], data[1], data[2], data[3]);
+	bswap32_mem(data, len);
+	//printf("after: %02X %02X %02X %02X\n", data[0], data[1], data[2], data[3]);
 
 	size_t instr_len;
 	instr_len = LLVMDisasmInstruction(
@@ -308,6 +303,8 @@ extern "C" int disassemble(uint32_t addr, uint8_t *data, int len, char *result)
 		result, /* output buf */
 		1024 /* size of output buf */
 	);
+
+	bswap32_mem(data, len);
 
 	if(instr_len <= 0) {
 		//printf("LLVMDisasmInstruction() returned %zu\n", instr_len);

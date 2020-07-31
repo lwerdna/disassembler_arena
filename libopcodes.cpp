@@ -15,15 +15,8 @@ using namespace std;
 #include <bfd.h> // for bfd_arch_arm, etc.
 #include <dis-asm.h>
 
-/*****************************************************************************/
-/* utilities */
-/*****************************************************************************/
-void uint32_t_swap(void *vp)
-{
-	uint8_t tmp, *bp=(uint8_t *)vp;
-	tmp = bp[0]; bp[0] = bp[3]; bp[3] = tmp;
-	tmp = bp[1]; bp[1] = bp[2]; bp[2] = tmp;
-}
+/* local stuff */
+#include "utils.h"
 
 /*****************************************************************************/
 /* disassembler callbacks */
@@ -52,9 +45,7 @@ int read_memory_dword_swap(bfd_vma memaddr, bfd_byte *myaddr, unsigned int lengt
 	uint8_t *source_bytes = (uint8_t *)dinfo->private_data;
 
 	memcpy(myaddr, source_bytes, length);
-
-	for(int i=0; i<length; i+=4)
-		uint32_t_swap(myaddr+i);
+	bswap32_mem(myaddr, length);
 
 	return 0;
 }

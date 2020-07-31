@@ -96,146 +96,146 @@ ppcd_broadway.so: ppcd_main.cpp ppcd.cpp ppcd.h
 
 # x86/x64
 
-libopcodes_x86.so: libopcodes.cpp
-	g++ $(CPPFLAGS) $(BFDFLAGS) -DX86 -shared -o libopcodes_x86.so libopcodes.cpp
+libopcodes_x86.so: libopcodes.cpp utils.o
+	g++ $(CPPFLAGS) $(BFDFLAGS) utils.o -DX86 -shared -o libopcodes_x86.so libopcodes.cpp
 
-libopcodes_x64.so: libopcodes.cpp
-	g++ $(CPPFLAGS) $(BFDFLAGS) -DX64 -shared -o libopcodes_x64.so libopcodes.cpp
+libopcodes_x64.so: libopcodes.cpp utils.o
+	g++ $(CPPFLAGS) $(BFDFLAGS) utils.o -DX64 -shared -o libopcodes_x64.so libopcodes.cpp
 
 # powerpc
 
-libopcodes_ppc.so: libopcodes.cpp
-	g++ $(CPPFLAGS) $(BFDFLAGS) -DPPC -shared -o libopcodes_ppc.so libopcodes.cpp
+libopcodes_ppc.so: libopcodes.cpp utils.o
+	g++ $(CPPFLAGS) $(BFDFLAGS) utils.o -DPPC -shared -o libopcodes_ppc.so libopcodes.cpp
 
-libopcodes_ppc64.so: libopcodes.cpp
-	g++ $(CPPFLAGS) $(BFDFLAGS) -DPPC64 -shared -o libopcodes_ppc64.so libopcodes.cpp
+libopcodes_ppc64.so: libopcodes.cpp utils.o
+	g++ $(CPPFLAGS) $(BFDFLAGS) utils.o -DPPC64 -shared -o libopcodes_ppc64.so libopcodes.cpp
 
-libopcodes_ppc_403.so: libopcodes.cpp
-	g++ $(CPPFLAGS) $(BFDFLAGS) -DPPC_403 -shared -o libopcodes_ppc_403.so libopcodes.cpp
+libopcodes_ppc_403.so: libopcodes.cpp utils.o
+	g++ $(CPPFLAGS) $(BFDFLAGS) utils.o -DPPC_403 -shared -o libopcodes_ppc_403.so libopcodes.cpp
 
-libopcodes_ppc_403gc.so: libopcodes.cpp
-	g++ $(CPPFLAGS) $(BFDFLAGS) -DPPC_403GC -shared -o libopcodes_ppc_403gc.so libopcodes.cpp
+libopcodes_ppc_403gc.so: libopcodes.cpp utils.o
+	g++ $(CPPFLAGS) $(BFDFLAGS) utils.o -DPPC_403GC -shared -o libopcodes_ppc_403gc.so libopcodes.cpp
 
-libopcodes_ppc_405.so: libopcodes.cpp
-	g++ $(CPPFLAGS) $(BFDFLAGS) -DPPC_405 -shared -o libopcodes_ppc_405.so libopcodes.cpp
+libopcodes_ppc_405.so: libopcodes.cpp utils.o
+	g++ $(CPPFLAGS) $(BFDFLAGS) utils.o -DPPC_405 -shared -o libopcodes_ppc_405.so libopcodes.cpp
 
-libopcodes_ppc_505.so: libopcodes.cpp
-	g++ $(CPPFLAGS) $(BFDFLAGS) -DPPC_505 -shared -o libopcodes_ppc_505.so libopcodes.cpp
+libopcodes_ppc_505.so: libopcodes.cpp utils.o
+	g++ $(CPPFLAGS) $(BFDFLAGS) utils.o -DPPC_505 -shared -o libopcodes_ppc_505.so libopcodes.cpp
 
-libopcodes_ppc_601.so: libopcodes.cpp
-	g++ $(CPPFLAGS) $(BFDFLAGS) -DPPC_601 -shared -o libopcodes_ppc_601.so libopcodes.cpp
+libopcodes_ppc_601.so: libopcodes.cpp utils.o
+	g++ $(CPPFLAGS) $(BFDFLAGS) utils.o -DPPC_601 -shared -o libopcodes_ppc_601.so libopcodes.cpp
 
-libopcodes_ppc_602.so: libopcodes.cpp
-	g++ $(CPPFLAGS) $(BFDFLAGS) -DPPC_602 -shared -o libopcodes_ppc_602.so libopcodes.cpp
+libopcodes_ppc_602.so: libopcodes.cpp utils.o
+	g++ $(CPPFLAGS) $(BFDFLAGS) utils.o -DPPC_602 -shared -o libopcodes_ppc_602.so libopcodes.cpp
 
-libopcodes_ppc_603.so: libopcodes.cpp
-	g++ $(CPPFLAGS) $(BFDFLAGS) -DPPC_603 -shared -o libopcodes_ppc_603.so libopcodes.cpp
+libopcodes_ppc_603.so: libopcodes.cpp utils.o
+	g++ $(CPPFLAGS) $(BFDFLAGS) utils.o -DPPC_603 -shared -o libopcodes_ppc_603.so libopcodes.cpp
 
-libopcodes_ppc_ec603e.so: libopcodes.cpp
-	g++ $(CPPFLAGS) $(BFDFLAGS) -DPPC_EC603E -shared -o libopcodes_ppc_ec603e.so libopcodes.cpp
+libopcodes_ppc_ec603e.so: libopcodes.cpp utils.o
+	g++ $(CPPFLAGS) $(BFDFLAGS) utils.o -DPPC_EC603E -shared -o libopcodes_ppc_ec603e.so libopcodes.cpp
 
-libopcodes_ppc_604.so: libopcodes.cpp
-	g++ $(CPPFLAGS) $(BFDFLAGS) -DPPC_604 -shared -o libopcodes_ppc_604.so libopcodes.cpp
+libopcodes_ppc_604.so: libopcodes.cpp utils.o
+	g++ $(CPPFLAGS) $(BFDFLAGS) utils.o -DPPC_604 -shared -o libopcodes_ppc_604.so libopcodes.cpp
 
-libopcodes_ppc_620.so: libopcodes.cpp
-	g++ $(CPPFLAGS) $(BFDFLAGS) -DPPC_620 -shared -o libopcodes_ppc_620.so libopcodes.cpp
+libopcodes_ppc_620.so: libopcodes.cpp utils.o
+	g++ $(CPPFLAGS) $(BFDFLAGS) utils.o -DPPC_620 -shared -o libopcodes_ppc_620.so libopcodes.cpp
 
-libopcodes_ppc_630.so: libopcodes.cpp
-	g++ $(CPPFLAGS) $(BFDFLAGS) -DPPC_630 -shared -o libopcodes_ppc_630.so libopcodes.cpp
+libopcodes_ppc_630.so: libopcodes.cpp utils.o
+	g++ $(CPPFLAGS) $(BFDFLAGS) utils.o -DPPC_630 -shared -o libopcodes_ppc_630.so libopcodes.cpp
 
-libopcodes_ppc_750.so: libopcodes.cpp
-	g++ $(CPPFLAGS) $(BFDFLAGS) -DPPC_750 -shared -o libopcodes_ppc_750.so libopcodes.cpp
+libopcodes_ppc_750.so: libopcodes.cpp utils.o
+	g++ $(CPPFLAGS) $(BFDFLAGS) utils.o -DPPC_750 -shared -o libopcodes_ppc_750.so libopcodes.cpp
 
-libopcodes_ppc_860.so: libopcodes.cpp
-	g++ $(CPPFLAGS) $(BFDFLAGS) -DPPC_860 -shared -o libopcodes_ppc_860.so libopcodes.cpp
+libopcodes_ppc_860.so: libopcodes.cpp utils.o
+	g++ $(CPPFLAGS) $(BFDFLAGS) utils.o -DPPC_860 -shared -o libopcodes_ppc_860.so libopcodes.cpp
 
-libopcodes_ppc_a35.so: libopcodes.cpp
-	g++ $(CPPFLAGS) $(BFDFLAGS) -DPPC_A35 -shared -o libopcodes_ppc_a35.so libopcodes.cpp
+libopcodes_ppc_a35.so: libopcodes.cpp utils.o
+	g++ $(CPPFLAGS) $(BFDFLAGS) utils.o -DPPC_A35 -shared -o libopcodes_ppc_a35.so libopcodes.cpp
 
-libopcodes_ppc_rs64ii.so: libopcodes.cpp
-	g++ $(CPPFLAGS) $(BFDFLAGS) -DPPC_RS64II -shared -o libopcodes_ppc_rs64ii.so libopcodes.cpp
+libopcodes_ppc_rs64ii.so: libopcodes.cpp utils.o
+	g++ $(CPPFLAGS) $(BFDFLAGS) utils.o -DPPC_RS64II -shared -o libopcodes_ppc_rs64ii.so libopcodes.cpp
 
-libopcodes_ppc_rs64iii.so: libopcodes.cpp
-	g++ $(CPPFLAGS) $(BFDFLAGS) -DPPC_RS64III -shared -o libopcodes_ppc_rs64iii.so libopcodes.cpp
+libopcodes_ppc_rs64iii.so: libopcodes.cpp utils.o
+	g++ $(CPPFLAGS) $(BFDFLAGS) utils.o -DPPC_RS64III -shared -o libopcodes_ppc_rs64iii.so libopcodes.cpp
 
-libopcodes_ppc_7400.so: libopcodes.cpp
-	g++ $(CPPFLAGS) $(BFDFLAGS) -DPPC_7400 -shared -o libopcodes_ppc_7400.so libopcodes.cpp
+libopcodes_ppc_7400.so: libopcodes.cpp utils.o
+	g++ $(CPPFLAGS) $(BFDFLAGS) utils.o -DPPC_7400 -shared -o libopcodes_ppc_7400.so libopcodes.cpp
 
-libopcodes_ppc_e500.so: libopcodes.cpp
-	g++ $(CPPFLAGS) $(BFDFLAGS) -DPPC_E500 -shared -o libopcodes_ppc_e500.so libopcodes.cpp
+libopcodes_ppc_e500.so: libopcodes.cpp utils.o
+	g++ $(CPPFLAGS) $(BFDFLAGS) utils.o -DPPC_E500 -shared -o libopcodes_ppc_e500.so libopcodes.cpp
 
-libopcodes_ppc_e500mc.so: libopcodes.cpp
-	g++ $(CPPFLAGS) $(BFDFLAGS) -DPPC_E500MC -shared -o libopcodes_ppc_e500mc.so libopcodes.cpp
+libopcodes_ppc_e500mc.so: libopcodes.cpp utils.o
+	g++ $(CPPFLAGS) $(BFDFLAGS) utils.o -DPPC_E500MC -shared -o libopcodes_ppc_e500mc.so libopcodes.cpp
 
-libopcodes_ppc_e500mc64.so: libopcodes.cpp
-	g++ $(CPPFLAGS) $(BFDFLAGS) -DPPC_E500MC64 -shared -o libopcodes_ppc_e500mc64.so libopcodes.cpp
+libopcodes_ppc_e500mc64.so: libopcodes.cpp utils.o
+	g++ $(CPPFLAGS) $(BFDFLAGS) utils.o -DPPC_E500MC64 -shared -o libopcodes_ppc_e500mc64.so libopcodes.cpp
 
-libopcodes_ppc_e5500.so: libopcodes.cpp
-	g++ $(CPPFLAGS) $(BFDFLAGS) -DPPC_E5500 -shared -o libopcodes_ppc_e5500.so libopcodes.cpp
+libopcodes_ppc_e5500.so: libopcodes.cpp utils.o
+	g++ $(CPPFLAGS) $(BFDFLAGS) utils.o -DPPC_E5500 -shared -o libopcodes_ppc_e5500.so libopcodes.cpp
 
-libopcodes_ppc_e6500.so: libopcodes.cpp
-	g++ $(CPPFLAGS) $(BFDFLAGS) -DPPC_E6500 -shared -o libopcodes_ppc_e6500.so libopcodes.cpp
+libopcodes_ppc_e6500.so: libopcodes.cpp utils.o
+	g++ $(CPPFLAGS) $(BFDFLAGS) utils.o -DPPC_E6500 -shared -o libopcodes_ppc_e6500.so libopcodes.cpp
 
-libopcodes_ppc_titan.so: libopcodes.cpp
-	g++ $(CPPFLAGS) $(BFDFLAGS) -DPPC_TITAN -shared -o libopcodes_ppc_titan.so libopcodes.cpp
+libopcodes_ppc_titan.so: libopcodes.cpp utils.o
+	g++ $(CPPFLAGS) $(BFDFLAGS) utils.o -DPPC_TITAN -shared -o libopcodes_ppc_titan.so libopcodes.cpp
 
-libopcodes_ppc_vle.so: libopcodes.cpp
-	g++ $(CPPFLAGS) $(BFDFLAGS) -DPPC_VLE -shared -o libopcodes_ppc_vle.so libopcodes.cpp
+libopcodes_ppc_vle.so: libopcodes.cpp utils.o
+	g++ $(CPPFLAGS) $(BFDFLAGS) utils.o -DPPC_VLE -shared -o libopcodes_ppc_vle.so libopcodes.cpp
 
 # arm
 
-libopcodes_arm_unknown.so:
-	g++ $(CPPFLAGS) $(BFDFLAGS) -DARM_UNKNOWN -shared -o libopcodes_arm_unknown.so libopcodes.cpp
+libopcodes_arm_unknown.so: libopcodes.cpp utils.o
+	g++ $(CPPFLAGS) $(BFDFLAGS) utils.o -DARM_UNKNOWN -shared -o libopcodes_arm_unknown.so libopcodes.cpp
 
-libopcodes_arm_2.so:
-	g++ $(CPPFLAGS) $(BFDFLAGS) -DARM_2 -shared -o libopcodes_arm_2.so libopcodes.cpp
+libopcodes_arm_2.so: libopcodes.cpp utils.o
+	g++ $(CPPFLAGS) $(BFDFLAGS) utils.o -DARM_2 -shared -o libopcodes_arm_2.so libopcodes.cpp
 
-libopcodes_arm_2a.so:
-	g++ $(CPPFLAGS) $(BFDFLAGS) -DARM_2a -shared -o libopcodes_arm_2a.so libopcodes.cpp
+libopcodes_arm_2a.so: libopcodes.cpp utils.o
+	g++ $(CPPFLAGS) $(BFDFLAGS) utils.o -DARM_2a -shared -o libopcodes_arm_2a.so libopcodes.cpp
 
-libopcodes_arm_3.so:
-	g++ $(CPPFLAGS) $(BFDFLAGS) -DARM_3 -shared -o libopcodes_arm_3.so libopcodes.cpp
+libopcodes_arm_3.so: libopcodes.cpp utils.o
+	g++ $(CPPFLAGS) $(BFDFLAGS) utils.o -DARM_3 -shared -o libopcodes_arm_3.so libopcodes.cpp
 
-libopcodes_arm_3m.so:
-	g++ $(CPPFLAGS) $(BFDFLAGS) -DARM_3M -shared -o libopcodes_arm_3m.so libopcodes.cpp
+libopcodes_arm_3m.so: libopcodes.cpp utils.o
+	g++ $(CPPFLAGS) $(BFDFLAGS) utils.o -DARM_3M -shared -o libopcodes_arm_3m.so libopcodes.cpp
 
-libopcodes_arm_4.so:
-	g++ $(CPPFLAGS) $(BFDFLAGS) -DARM_4 -shared -o libopcodes_arm_4.so libopcodes.cpp
+libopcodes_arm_4.so: libopcodes.cpp utils.o
+	g++ $(CPPFLAGS) $(BFDFLAGS) utils.o -DARM_4 -shared -o libopcodes_arm_4.so libopcodes.cpp
 
-libopcodes_arm_4t.so:
-	g++ $(CPPFLAGS) $(BFDFLAGS) -DARM_4T -shared -o libopcodes_arm_4t.so libopcodes.cpp
+libopcodes_arm_4t.so: libopcodes.cpp utils.o
+	g++ $(CPPFLAGS) $(BFDFLAGS) utils.o -DARM_4T -shared -o libopcodes_arm_4t.so libopcodes.cpp
 
-libopcodes_arm_5.so:
-	g++ $(CPPFLAGS) $(BFDFLAGS) -DARM_5 -shared -o libopcodes_arm_5.so libopcodes.cpp
+libopcodes_arm_5.so: libopcodes.cpp utils.o
+	g++ $(CPPFLAGS) $(BFDFLAGS) utils.o -DARM_5 -shared -o libopcodes_arm_5.so libopcodes.cpp
 
-libopcodes_arm_5t.so:
-	g++ $(CPPFLAGS) $(BFDFLAGS) -DARM_5T -shared -o libopcodes_arm_5t.so libopcodes.cpp
+libopcodes_arm_5t.so: libopcodes.cpp utils.o
+	g++ $(CPPFLAGS) $(BFDFLAGS) utils.o -DARM_5T -shared -o libopcodes_arm_5t.so libopcodes.cpp
 
-libopcodes_arm_5te.so:
-	g++ $(CPPFLAGS) $(BFDFLAGS) -DARM_5TE -shared -o libopcodes_arm_5te.so libopcodes.cpp
+libopcodes_arm_5te.so: libopcodes.cpp utils.o
+	g++ $(CPPFLAGS) $(BFDFLAGS) utils.o -DARM_5TE -shared -o libopcodes_arm_5te.so libopcodes.cpp
 
-libopcodes_arm_xscale.so:
-	g++ $(CPPFLAGS) $(BFDFLAGS) -DARM_XSCALE -shared -o libopcodes_arm_xscale.so libopcodes.cpp
+libopcodes_arm_xscale.so: libopcodes.cpp utils.o
+	g++ $(CPPFLAGS) $(BFDFLAGS) utils.o -DARM_XSCALE -shared -o libopcodes_arm_xscale.so libopcodes.cpp
 
-libopcodes_arm_ep9312.so:
-	g++ $(CPPFLAGS) $(BFDFLAGS) -DARM_EP9312 -shared -o libopcodes_arm_ep9312.so libopcodes.cpp
+libopcodes_arm_ep9312.so: libopcodes.cpp utils.o
+	g++ $(CPPFLAGS) $(BFDFLAGS) utils.o -DARM_EP9312 -shared -o libopcodes_arm_ep9312.so libopcodes.cpp
 
-libopcodes_arm_iwmmxt.so:
-	g++ $(CPPFLAGS) $(BFDFLAGS) -DARM_IWMMXT -shared -o libopcodes_arm_iwmmxt.so libopcodes.cpp
+libopcodes_arm_iwmmxt.so: libopcodes.cpp utils.o
+	g++ $(CPPFLAGS) $(BFDFLAGS) utils.o -DARM_IWMMXT -shared -o libopcodes_arm_iwmmxt.so libopcodes.cpp
 
-libopcodes_arm_iwmmxt2.so:
-	g++ $(CPPFLAGS) $(BFDFLAGS) -DARM_IWMMXT2 -shared -o libopcodes_arm_iwmmxt2.so libopcodes.cpp
+libopcodes_arm_iwmmxt2.so: libopcodes.cpp utils.o
+	g++ $(CPPFLAGS) $(BFDFLAGS) utils.o -DARM_IWMMXT2 -shared -o libopcodes_arm_iwmmxt2.so libopcodes.cpp
 
 # aarch64
 
-libopcodes_aarch64.so: libopcodes.cpp
-	g++ $(CPPFLAGS) $(BFDFLAGS) -DAARCH64 -shared -o libopcodes_aarch64.so libopcodes.cpp
+libopcodes_aarch64.so: libopcodes.cpp utils.o
+	g++ $(CPPFLAGS) $(BFDFLAGS) utils.o -DAARCH64 -shared -o libopcodes_aarch64.so libopcodes.cpp
 
-libopcodes_aarch64_ilp32.so: libopcodes.cpp
-	g++ $(CPPFLAGS) $(BFDFLAGS) -DAARCH64_ILP32 -shared -o libopcodes_aarch64_ilp32.so libopcodes.cpp
+libopcodes_aarch64_ilp32.so: libopcodes.cpp utils.o
+	g++ $(CPPFLAGS) $(BFDFLAGS) utils.o -DAARCH64_ILP32 -shared -o libopcodes_aarch64_ilp32.so libopcodes.cpp
 
 #------------------------------------------------------------------------------
-# llvm
+# LLVM
 #------------------------------------------------------------------------------
 
 PATH_LLVM =
@@ -243,23 +243,29 @@ PATH_LLVM =
 LLVM_COMPILE_FLAGS = $(shell llvm-config --cxxflags)
 LLVM_LINK_FLAGS = $(shell llvm-config --ldflags) $(shell llvm-config --libs) $(shell llvm-config --system-libs)
 
-llvm_armv8.so: llvm.cpp
-	g++ $(CPPFLAGS) $(LLVM_COMPILE_FLAGS) $(LLVM_LINK_FLAGS) -DAARCH64_ARMV8 -shared -o llvm_armv8.so llvm.cpp
+llvm_armv8.so: llvm.cpp utils.o
+	g++ $(CPPFLAGS) $(LLVM_COMPILE_FLAGS) $(LLVM_LINK_FLAGS) utils.o -DAARCH64_ARMV8 -shared -o llvm_armv8.so llvm.cpp
 
-llvm_armv8_1a.so: llvm.cpp
-	g++ $(CPPFLAGS) $(LLVM_COMPILE_FLAGS) $(LLVM_LINK_FLAGS) -DAARCH64_ARMV8_1A -shared -o llvm_armv8_1a.so llvm.cpp
+llvm_armv8_1a.so: llvm.cpp utils.o
+	g++ $(CPPFLAGS) $(LLVM_COMPILE_FLAGS) $(LLVM_LINK_FLAGS) utils.o -DAARCH64_ARMV8_1A -shared -o llvm_armv8_1a.so llvm.cpp
 
-llvm_armv8_2a.so: llvm.cpp
-	g++ $(CPPFLAGS) $(LLVM_COMPILE_FLAGS) $(LLVM_LINK_FLAGS) -DAARCH64_ARMV8_2A -shared -o llvm_armv8_2a.so llvm.cpp
+llvm_armv8_2a.so: llvm.cpp utils.o
+	g++ $(CPPFLAGS) $(LLVM_COMPILE_FLAGS) $(LLVM_LINK_FLAGS) utils.o -DAARCH64_ARMV8_2A -shared -o llvm_armv8_2a.so llvm.cpp
 
-llvm_armv8_3a.so: llvm.cpp
-	g++ $(CPPFLAGS) $(LLVM_COMPILE_FLAGS) $(LLVM_LINK_FLAGS) -DAARCH64_ARMV8_3A -shared -o llvm_armv8_3a.so llvm.cpp
+llvm_armv8_3a.so: llvm.cpp utils.o
+	g++ $(CPPFLAGS) $(LLVM_COMPILE_FLAGS) $(LLVM_LINK_FLAGS) utils.o -DAARCH64_ARMV8_3A -shared -o llvm_armv8_3a.so llvm.cpp
 
-llvm_armv8_4a.so: llvm.cpp
-	g++ $(CPPFLAGS) $(LLVM_COMPILE_FLAGS) $(LLVM_LINK_FLAGS) -DAARCH64_ARMV8_4A -shared -o llvm_armv8_4a.so llvm.cpp
+llvm_armv8_4a.so: llvm.cpp utils.o
+	g++ $(CPPFLAGS) $(LLVM_COMPILE_FLAGS) $(LLVM_LINK_FLAGS) utils.o -DAARCH64_ARMV8_4A -shared -o llvm_armv8_4a.so llvm.cpp
 
-llvm_armv8_5a.so: llvm.cpp
-	g++ $(CPPFLAGS) $(LLVM_COMPILE_FLAGS) $(LLVM_LINK_FLAGS) -DAARCH64_ARMV8_5A -shared -o llvm_armv8_5a.so llvm.cpp
+llvm_armv8_5a.so: llvm.cpp utils.o
+	g++ $(CPPFLAGS) $(LLVM_COMPILE_FLAGS) $(LLVM_LINK_FLAGS) utils.o -DAARCH64_ARMV8_5A -shared -o llvm_armv8_5a.so llvm.cpp
 
-llvm_armv8_all.so: llvm.cpp
-	g++ $(CPPFLAGS) $(LLVM_COMPILE_FLAGS) $(LLVM_LINK_FLAGS) -DAARCH64_ARMV8_ALL -shared -o llvm_armv8_all.so llvm.cpp
+llvm_armv8_all.so: llvm.cpp utils.o
+	g++ $(CPPFLAGS) $(LLVM_COMPILE_FLAGS) $(LLVM_LINK_FLAGS) utils.o -DAARCH64_ARMV8_ALL -shared -o llvm_armv8_all.so llvm.cpp
+
+#------------------------------------------------------------------------------
+# misc
+#------------------------------------------------------------------------------
+utils.o: utils.cpp
+	g++ -c utils.cpp -o utils.o
