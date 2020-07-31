@@ -1,6 +1,6 @@
-CPPFLAGS = 
+CPPFLAGS =
 CPPFLAGS += -I/usr/libopcodesal/include -std=c++11 -O0 -g
-BFDFLAGS = -lbfd -liberty -lopcodes -lz 
+BFDFLAGS = -lbfd -liberty -lopcodes -lz
 
 .PHONY: all
 
@@ -19,7 +19,10 @@ TARGETS_CAPSTONE_ARM = capstone_arm.so capstone_arm_v8.so capstone_arm_thumb.so 
 TARGETS_CAPSTONE_AARCH64 = capstone_aarch64.so
 TARGETS_CAPSTONE_PPC = capstone_ppc64.so
 
-TARGETS_AARCH64 = $(TARGETS_LIBOPCODES_AARCH64) $(TARGETS_CAPSTONE_AARCH64)
+# llvm
+TARGETS_LLVM_AARCH64 = llvm_armv8.so llvm.cpp llvm_armv8_1a.so llvm.cpp llvm_armv8_2a.so llvm.cpp llvm_armv8_3a.so llvm.cpp llvm_armv8_4a.so llvm.cpp llvm_armv8_5a.so llvm.cpp llvm_armv8_all.so
+
+TARGETS_AARCH64 = $(TARGETS_LIBOPCODES_AARCH64) $(TARGETS_CAPSTONE_AARCH64) $(TARGETS_LLVM_AARCH64)
 TARGETS_INTEL = $(TARGETS_LIBOPCODES_INTEL) $(TARGETS_CAPSTONE_INTEL)
 TARGETS_PPC = $(TARGETS_PPCD_PPC) $(TARGETS_LIBOPCODES_PPC) $(TARGETS_CAPSTONE_PPC)
 
@@ -231,3 +234,32 @@ libopcodes_aarch64.so: libopcodes.cpp
 libopcodes_aarch64_ilp32.so: libopcodes.cpp
 	g++ $(CPPFLAGS) $(BFDFLAGS) -DAARCH64_ILP32 -shared -o libopcodes_aarch64_ilp32.so libopcodes.cpp
 
+#------------------------------------------------------------------------------
+# llvm
+#------------------------------------------------------------------------------
+
+PATH_LLVM =
+
+LLVM_COMPILE_FLAGS = $(shell llvm-config --cxxflags)
+LLVM_LINK_FLAGS = $(shell llvm-config --ldflags) $(shell llvm-config --libs) $(shell llvm-config --system-libs)
+
+llvm_armv8.so: llvm.cpp
+	g++ $(CPPFLAGS) $(LLVM_COMPILE_FLAGS) $(LLVM_LINK_FLAGS) -DAARCH64_ARMV8 -shared -o llvm_armv8.so llvm.cpp
+
+llvm_armv8_1a.so: llvm.cpp
+	g++ $(CPPFLAGS) $(LLVM_COMPILE_FLAGS) $(LLVM_LINK_FLAGS) -DAARCH64_ARMV8_1A -shared -o llvm_armv8_1a.so llvm.cpp
+
+llvm_armv8_2a.so: llvm.cpp
+	g++ $(CPPFLAGS) $(LLVM_COMPILE_FLAGS) $(LLVM_LINK_FLAGS) -DAARCH64_ARMV8_2A -shared -o llvm_armv8_2a.so llvm.cpp
+
+llvm_armv8_3a.so: llvm.cpp
+	g++ $(CPPFLAGS) $(LLVM_COMPILE_FLAGS) $(LLVM_LINK_FLAGS) -DAARCH64_ARMV8_3A -shared -o llvm_armv8_3a.so llvm.cpp
+
+llvm_armv8_4a.so: llvm.cpp
+	g++ $(CPPFLAGS) $(LLVM_COMPILE_FLAGS) $(LLVM_LINK_FLAGS) -DAARCH64_ARMV8_4A -shared -o llvm_armv8_4a.so llvm.cpp
+
+llvm_armv8_5a.so: llvm.cpp
+	g++ $(CPPFLAGS) $(LLVM_COMPILE_FLAGS) $(LLVM_LINK_FLAGS) -DAARCH64_ARMV8_5A -shared -o llvm_armv8_5a.so llvm.cpp
+
+llvm_armv8_all.so: llvm.cpp
+	g++ $(CPPFLAGS) $(LLVM_COMPILE_FLAGS) $(LLVM_LINK_FLAGS) -DAARCH64_ARMV8_ALL -shared -o llvm_armv8_all.so llvm.cpp

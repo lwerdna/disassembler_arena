@@ -11,9 +11,12 @@ def disasm(sopath, data, addr=0):
 	dll = ctypes.CDLL(sopath)
 	cbuf = ctypes.create_string_buffer(256)
 
-	dll.disassemble(addr, data, len(data), ctypes.byref(cbuf))
-	tmp = cbuf.value.decode('utf-8')
-	tmp = tmp.replace('\t', ' ')
+	rv = dll.disassemble(addr, data, len(data), ctypes.byref(cbuf))
+	if rv != 0:
+		tmp = '(error)'
+	else:
+		tmp = cbuf.value.decode('utf-8')
+		tmp = tmp.replace('\t', ' ')
 	return tmp
 
 if __name__ == '__main__':
