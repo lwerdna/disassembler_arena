@@ -110,10 +110,12 @@ int disasm_libopcodes(
 		/* WORKAROUND: aarch64 is always little endian to libopcodes,
 			see <binutils>/opcodes/aarch64-dis.c for hardcode set to BFD_ENDIAN_LITTLE
 			need custom memory reader to get big endian from aarch64 */
+		/*
 		if(dinfo.arch==bfd_arch_aarch64 && dinfo.endian==BFD_ENDIAN_BIG) {
 			dinfo.private_data = data;
 			dinfo.read_memory_func = read_memory_dword_swap;
 		}
+		*/
 
 		/* store in lookup */
 		am2di[amp] = dinfo;

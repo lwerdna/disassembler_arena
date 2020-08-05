@@ -17,14 +17,14 @@ def disasm(sopath, data, addr=0):
 	return tmp
 
 if __name__ == '__main__':
-	# d5 03 20 1f is big-endian instruction word 0xd503201f is nop
-	assert disasm('libopcodes_aarch64.so', b'\xd5\x03\x20\x1f') == 'nop'
-	assert disasm('libopcodes_aarch64_ilp32.so', b'\xd5\x03\x20\x1f') == 'nop'
-	assert disasm('capstone_aarch64.so', b'\xd5\x03\x20\x1f') == 'nop'
-	assert disasm('llvm_armv8_all.so', b'\xd5\x03\x20\x1f') == 'nop'
+	# 1f 20 03 d5 is big-endian instruction word 0xd503201f is nop
+	assert disasm('libopcodes_aarch64.so', b'\x1f\x20\x03\xd5') == 'nop'
+	assert disasm('libopcodes_aarch64_ilp32.so', b'\x1f\x20\x03\xd5') == 'nop'
+	assert disasm('capstone_aarch64.so', b'\x1f\x20\x03\xd5') == 'nop'
+	assert disasm('llvm_armv8_all.so', b'\x1f\x20\x03\xd5') == 'nop'
 
 	# this is stz2g v8.5 memory tagging feature, earlier versions should fail
 	# D9FFF7FF "stz2g.."
-	assert disasm('llvm_armv8_all.so', b'\xd9\xff\xf7\xff') == 'stz2g sp, [sp], #-16'
+	assert disasm('llvm_armv8_all.so', b'\xff\xf7\xff\xd9') == 'stz2g sp, [sp], #-16'
 
 	print('passed')

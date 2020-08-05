@@ -297,7 +297,7 @@ extern "C" int disassemble(uint32_t addr, uint8_t *data, int len, char *result)
 	/* llvm treats incoming data as little endian, and providing "aarch64_be" has no effect
 		so, falsely swap it to force into our big-endian convention */
 	//printf("before: %02X %02X %02X %02X\n", data[0], data[1], data[2], data[3]);
-	bswap32_mem(data, len);
+	//bswap32_mem(data, len);
 	//printf("after: %02X %02X %02X %02X\n", data[0], data[1], data[2], data[3]);
 
 	size_t instr_len;
@@ -310,7 +310,7 @@ extern "C" int disassemble(uint32_t addr, uint8_t *data, int len, char *result)
 		1024 /* size of output buf */
 	);
 
-	bswap32_mem(data, len);
+	//bswap32_mem(data, len);
 
 	if(instr_len <= 0) {
 		//printf("LLVMDisasmInstruction() returned %zu\n", instr_len);
