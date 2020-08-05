@@ -22,17 +22,30 @@ TARGETS_CAPSTONE_PPC = capstone_ppc64.so
 # llvm
 TARGETS_LLVM_AARCH64 = llvm_armv8.so llvm.cpp llvm_armv8_1a.so llvm.cpp llvm_armv8_2a.so llvm.cpp llvm_armv8_3a.so llvm.cpp llvm_armv8_4a.so llvm.cpp llvm_armv8_5a.so llvm.cpp llvm_armv8_all.so
 
-TARGETS_AARCH64 = $(TARGETS_LIBOPCODES_AARCH64) $(TARGETS_CAPSTONE_AARCH64) $(TARGETS_LLVM_AARCH64)
-TARGETS_INTEL = $(TARGETS_LIBOPCODES_INTEL) $(TARGETS_CAPSTONE_INTEL)
-TARGETS_PPC = $(TARGETS_PPCD_PPC) $(TARGETS_LIBOPCODES_PPC) $(TARGETS_CAPSTONE_PPC)
+# binary ninja
+TARGETS_BINJA_INTEL = binja_x86.so binja_x64.so
+TARGETS_BINJA_ARM = binja_armv7.so binja_thumb2.so
+TARGETS_BINJA_AARCH64 = binja_aarch64.so
+TARGETS_BINJA_PPC = binja_ppc.so
+TARGETS_BINJA_MIPS = binja_mips32.so
 
-all: $(TARGETS_AARCH64) $(TARGETS_INTEL) $(TARGETS_PPC)
+TARGETS_INTEL = $(TARGETS_LIBOPCODES_INTEL) $(TARGETS_CAPSTONE_INTEL) $(TARGETS_BINJA_INTEL)
+TARGETS_ARM = $(TARGETS_LIBOPCODES_ARM) $(TARGETS_CAPSTONE_ARM) $(TARGETS_LLVM_ARM) $(TARGETS_BINJA_ARM)
+TARGETS_AARCH64 = $(TARGETS_LIBOPCODES_AARCH64) $(TARGETS_CAPSTONE_AARCH64) $(TARGETS_LLVM_AARCH64) $(TARGETS_BINJA_AARCH64)
+TARGETS_PPC = $(TARGETS_PPCD_PPC) $(TARGETS_LIBOPCODES_PPC) $(TARGETS_CAPSTONE_PPC) $(TARGETS_BINJA_PPC)
+TARGETS_MIPS = $(TARGETS_BINJA_MIPS)
 
-aarch64: $(TARGETS_AARCH64)
+all: $(TARGETS_INTEL) $(TARGETS_ARM) $(TARGETS_AARCH64) $(TARGETS_PPC) $(TARGETS_MIPS)
 
 intel: $(TARGETS_INTEL)
 
+arm: $(TARGETS_ARM)
+
+aarch64: $(TARGETS_AARCH64)
+
 ppc: $(TARGETS_PPC)
+
+mips: $(TARGETS_MIPS)
 
 clean:
 	rm -rf *.so *.o *.dSYM
@@ -263,6 +276,36 @@ llvm_armv8_5a.so: llvm.cpp utils.o
 
 llvm_armv8_all.so: llvm.cpp utils.o
 	g++ $(CPPFLAGS) $(LLVM_COMPILE_FLAGS) $(LLVM_LINK_FLAGS) utils.o -DAARCH64_ARMV8_ALL -shared -o llvm_armv8_all.so llvm.cpp
+
+#------------------------------------------------------------------------------
+# BINARY NINJA
+#------------------------------------------------------------------------------
+
+BINJA_API ?= /path/to/api # from https://github.com/Vector35/binaryninja-api
+BINJA_APP ?= /path/to/app # eg: /Applications/Binary\ Ninja.app
+BINJA_COMPILE_FLAGS = -I$(BINJA_API) -DPATH_BUNDLED_PLUGINS='"$(BINJA_APP)/Contents/MacOS/plugins"'
+BINJA_LINK_FLAGS = -L$(BINJA_APP)/Contents/MacOS -Wl,-rpath,$(BINJA_APP)/Contents/MacOS -lbinaryninjacore
+
+binja_x86.so: binaryninja.cpp
+	g++ -DX86 $(CPPFLAGS) $(BINJA_COMPILE_FLAGS) binaryninja.cpp $(BINJA_LINK_FLAGS) -shared -o binja_x86.so
+
+binja_x64.so: binaryninja.cpp
+	g++ -DX64 $(CPPFLAGS) $(BINJA_COMPILE_FLAGS) binaryninja.cpp $(BINJA_LINK_FLAGS) -shared -o binja_x64.so
+
+binja_armv7.so: binaryninja.cpp
+	g++ -DARMV7 $(CPPFLAGS) $(BINJA_COMPILE_FLAGS) binaryninja.cpp $(BINJA_LINK_FLAGS) -shared -o binja_armv7.so
+
+binja_thumb2.so: binaryninja.cpp
+	g++ -DTHUMB2 $(CPPFLAGS) $(BINJA_COMPILE_FLAGS) binaryninja.cpp $(BINJA_LINK_FLAGS) -shared -o binja_thumb2.so
+
+binja_ppc.so: binaryninja.cpp
+	g++ -DPPC $(CPPFLAGS) $(BINJA_COMPILE_FLAGS) binaryninja.cpp $(BINJA_LINK_FLAGS) -shared -o binja_ppc.so
+
+binja_aarch64.so: binaryninja.cpp
+	g++ -DAARCH64 $(CPPFLAGS) $(BINJA_COMPILE_FLAGS) binaryninja.cpp $(BINJA_LINK_FLAGS) -shared -o binja_aarch64.so
+
+binja_mips32.so: binaryninja.cpp
+	g++ -DMIPS32 $(CPPFLAGS) $(BINJA_COMPILE_FLAGS) binaryninja.cpp $(BINJA_LINK_FLAGS) -shared -o binja_mips32.so
 
 #------------------------------------------------------------------------------
 # misc

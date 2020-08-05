@@ -232,10 +232,16 @@ extern "C" int disassemble(uint32_t addr, uint8_t *data, int len, char *result)
 
 		llvm
 		feature
-		string   ARM      pcode            when
-		-------  ---      -----            -----
-		+ras     RAS      HaveRASExt()     ???
-		+mte     MemTag   HaveMTEExt()     v8.5
+		string   ARM      pcode              when
+		-------  ---      -----              -----
+		+ras     RAS      HaveRASExt()       ???
+		+mte     MemTag   HaveMTEExt()       v8.5
+		+bti     ???      HaveBTIExt()       ???
+		+dotprod DotProd  HaveDOTPExt()      8.2
+		+crypto  sha2     HaveSHA512Ext()    8.2
+		+sm3     SM3      HaveSM3Ext()       8.2
+		+sm4     SM4      HaveSM4Ext()       8.2
+		???      I8MM     HaveInt8MatMulExt  8.2
 
 		https://github.com/llvm-mirror/llvm/blob/master/tools/llvm-mc/llvm-mc.cpp
 		https://github.com/llvm-mirror/llvm/tree/master/test/MC/Disassembler/AArch64
