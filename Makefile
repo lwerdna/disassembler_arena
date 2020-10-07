@@ -20,7 +20,8 @@ TARGETS_CAPSTONE_AARCH64 = capstone_aarch64.so
 TARGETS_CAPSTONE_PPC = capstone_ppc64.so
 
 # llvm
-TARGETS_LLVM_AARCH64 = llvm_armv8.so llvm.cpp llvm_armv8_1a.so llvm.cpp llvm_armv8_2a.so llvm.cpp llvm_armv8_3a.so llvm.cpp llvm_armv8_4a.so llvm.cpp llvm_armv8_5a.so llvm.cpp llvm_armv8_all.so
+#TARGETS_LLVM_AARCH64 = llvm_armv8.so llvm.cpp llvm_armv8_1a.so llvm.cpp llvm_armv8_2a.so llvm.cpp llvm_armv8_3a.so llvm.cpp llvm_armv8_4a.so llvm.cpp llvm_armv8_5a.so llvm.cpp llvm_armv8_all.so
+TARGETS_LLVM_AARCH64 = llvm_armv8_all.so
 
 # binary ninja
 TARGETS_BINJA_INTEL = binja_x86.so binja_x64.so

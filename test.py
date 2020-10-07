@@ -17,7 +17,7 @@ def disasm(sopath, data, addr=0):
 	return tmp
 
 if __name__ == '__main__':
-	# 1f 20 03 d5 is big-endian instruction word 0xd503201f is nop
+	# 1f 20 03 d5 is little-endian instruction word 0xd503201f is nop
 	assert disasm('libopcodes_aarch64.so', b'\x1f\x20\x03\xd5') == 'nop'
 	assert disasm('libopcodes_aarch64_ilp32.so', b'\x1f\x20\x03\xd5') == 'nop'
 	assert disasm('capstone_aarch64.so', b'\x1f\x20\x03\xd5') == 'nop'

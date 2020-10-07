@@ -1,14 +1,10 @@
-/* LLVM services: disassembler/assemble
-
-	anything starting with "llvm_svcs" is a public API
-	anything else is internal use
-*/
-
 /* c++ includes */
 #include <map>
 #include <string>
 #include <vector>
 using namespace std;
+
+#define ERR_RETURN(MSG) { printf("ERROR: " MSG "\n"); return -1; }
 
 /* llvm includes */
 #include <llvm-c/Target.h>
@@ -44,104 +40,6 @@ using namespace std;
 #include <llvm/Support/ToolOutputFile.h>
 
 #include "utils.h"
-
-/*****************************************************************************/
-/* MISCELLANY */
-/*****************************************************************************/
-
-void
-llvm_svcs_init(void)
-{
-	llvm::InitializeAllTargetInfos();
-	llvm::InitializeAllTargetMCs();
-	llvm::InitializeAllAsmParsers();
-	llvm::InitializeAllDisassemblers();
-}
-
-/* references:
-	http://clang.llvm.org/docs/CrossCompilation.html
-	<llvm_source>/include/llvm/ADT/Triple.h
-	https://wiki.debian.org/Multiarch/Tuples
-	https://www.linux-mips.org/wiki/MIPS_ABI_History
-*/
-void
-llvm_svcs_triplet_decompose(const char *triplet, string &arch, string &subarch,
-	string &vendor, string &os, string &environ, string &objFormat)
-{
-	//spec = llvm::sys::getDefaultTargetTriple();
-	//std::string machSpec = "x86_64-apple-darwin14.5.0";
-	//std::string machSpec = "x86_64-apple-darwin";
-	//std::string machSpec = "x86_64-thumb-linux-gnu";
-	//std::string machSpec = "x86_64-unknown-linux-gnu";
-	Triple trip(triplet);
-
-	/* FIRST component is <arch><subarch>
-		eg: x86,arm,thumb,mips,... */
-	arch = trip.getArchName();
-
-	/* sub architectures, see llvm/ADT/Triple.h
-		eg: v5,v6m,v7a,v7m,... */
-	switch(trip.getSubArch()) {
-		case llvm::Triple::NoSubArch: subarch=""; break;
-   		case llvm::Triple::ARMSubArch_v8_5a: subarch="v8_5a"; break;
-   		case llvm::Triple::ARMSubArch_v8_4a: subarch="v8_4a"; break;
-   		case llvm::Triple::ARMSubArch_v8_3a: subarch="v8_3a"; break;
-   		case llvm::Triple::ARMSubArch_v8_2a: subarch="v8_2a"; break;
-		case llvm::Triple::ARMSubArch_v8_1a: subarch="v8_1a"; break;
-		case llvm::Triple::ARMSubArch_v8_1m_mainline: subarch="v8_1m_mainline"; break;
-		case llvm::Triple::ARMSubArch_v8: subarch="v8"; break;
-		case llvm::Triple::ARMSubArch_v8r: subarch="v8r"; break;
-		case llvm::Triple::ARMSubArch_v8m_baseline: subarch="v8m_baseline"; break;
-		case llvm::Triple::ARMSubArch_v8m_mainline: subarch="v8m_mainline"; break;
-		case llvm::Triple::ARMSubArch_v7: subarch="v7"; break;
-		case llvm::Triple::ARMSubArch_v7em: subarch="v7em"; break;
-		case llvm::Triple::ARMSubArch_v7m: subarch="v7m"; break;
-		case llvm::Triple::ARMSubArch_v7s: subarch="v7s"; break;
-		case llvm::Triple::ARMSubArch_v7ve: subarch="v7ve"; break;
-		case llvm::Triple::ARMSubArch_v7k: subarch="v7k"; break;
-		case llvm::Triple::ARMSubArch_v6: subarch="v6"; break;
-		case llvm::Triple::ARMSubArch_v6m: subarch="v6m"; break;
-		case llvm::Triple::ARMSubArch_v6k: subarch="v6k"; break;
-		case llvm::Triple::ARMSubArch_v6t2: subarch="v6t2"; break;
-		case llvm::Triple::ARMSubArch_v5: subarch="v5"; break;
-		case llvm::Triple::ARMSubArch_v5te: subarch="v5te"; break;
-		case llvm::Triple::ARMSubArch_v4t: subarch="v4t"; break;
-		case llvm::Triple::KalimbaSubArch_v3: subarch="v3"; break;
-		case llvm::Triple::KalimbaSubArch_v4: subarch="v4"; break;
-		case llvm::Triple::KalimbaSubArch_v5: subarch="v5"; break;
-		case llvm::Triple::MipsSubArch_r6: subarch="r6"; break;
-		case llvm::Triple::PPCSubArch_spe: subarch="spe"; break;
-	}
-
-	/* SECOND component is <vendor>
-		eg: pc,apple,nvidia,ibm,... */
-	vendor = trip.getVendorName();
-
-	/* THIRD component is <sys> or <os>
-		eg: none,linux,win32,darwin,cuda,... */
-	os = trip.getOSName();
-
-	/* FOURTH component is <environment> or <abi>
-		eg: eabi,gnu,android.macho,elf,... */
-	environ = trip.getEnvironmentName();
-
-	/* this is not part of the triplet, just trivia about what object format
-		will be used to contain the code */
-	Triple::ObjectFormatType oft = trip.getObjectFormat();
-
-	switch(oft) {
-		case Triple::Wasm: objFormat = "wasm"; break;
-		case Triple::XCOFF: objFormat = "xcoff"; break;
-		case Triple::COFF: objFormat = "coff"; break;
-		case Triple::ELF: objFormat = "elf"; break;
-		case Triple::MachO: objFormat = "MachO"; break;
-		case Triple::UnknownObjectFormat: objFormat = "unknown"; break;
-	}
-}
-
-/*****************************************************************************/
-/* DISASSEMBLE related functions */
-/*****************************************************************************/
 
 /* a dummy function for the disasm context, else aarch64 crashes on
 	FF 43 00 D1
@@ -189,32 +87,96 @@ symbol_lookup_cb(void *DisInfo, uint64_t ReferenceValue, uint64_t *ReferenceType
 	return NULL;
 }
 
-extern "C" int test_triplet(char *triplet)
+/* this uses the LLVM C++ API */
+extern "C" int disassemble(uint32_t addr, uint8_t *data, int len, char *result)
 {
 	int rc = -1;
-	static LLVMDisasmContextRef context = NULL;
+	LLVMDisasmContextRef context;
+	const char *triplet = "aarch64-none-elf";
+	bool initialized = false;
+	size_t instr_len;
 
-	static bool initialized = false;
+	string TripleName, ArchName;
+	const char *FeaturesStr;
+	#if defined(AARCH64_ARMV8)
+	TripleName = ArchName = "aarch64";
+	FeaturesStr = "";
+	#elif defined(AARCH64_ARMV8_1A)
+	TripleName = ArchName = "aarch64";
+	FeaturesStr = "+v8.1a";
+	#elif defined(AARCH64_ARMV8_2A)
+	TripleName = ArchName = "aarch64";
+	FeaturesStr = "+v8.2a";
+	#elif defined(AARCH64_ARMV8_3A)
+	TripleName = ArchName = "aarch64";
+	FeaturesStr = "+v8.3a";
+	#elif defined(AARCH64_ARMV8_4A)
+	TripleName = ArchName = "aarch64";
+	FeaturesStr = "+v8.4a";
+	#elif defined(AARCH64_ARMV8_5A)
+	TripleName = ArchName = "aarch64";
+	FeaturesStr = "+v8.5a";
+	#elif defined(AARCH64_ARMV8_ALL)
+	TripleName = ArchName = "aarch64";
+	FeaturesStr =
+		"+v8.5a,+bti,+ccdp,+crc,+crypto,+dotprod,+fp-armv8,+fp16fml,"
+		"+fullfp16,+mte,+neon,+predres,+rand,+ras,+rcpc,+sb,"
+		"+sha3,+sm4,+spe,+specrestrict,+ssbs,+tme";
+	#endif
+
 	if(!initialized) {
 		LLVMInitializeAllTargetInfos();
 		LLVMInitializeAllTargetMCs();
-		LLVMInitializeAllAsmParsers();
+		//LLVMInitializeAllAsmParsers();
 		LLVMInitializeAllDisassemblers();
 		initialized = true;
 	}
 
-	//printf("testing triplet: %s\n", triplet);
+	/*
+	printf("disassemble_options(0x%X, %02X %02X %02X %02X, %d, \"%s\")\n",
+		addr, data[0], data[1], data[2], data[3], len, options);
+	*/
 
-	context = LLVMCreateDisasm(triplet, NULL, 0, NULL, symbol_lookup_cb);
-	if(context) {
-		LLVMDisasmDispose(context);
-		return 0;
+	context = LLVMCreateDisasmCPUFeatures (
+		triplet, /* triple */
+		"", /* CPU */
+		FeaturesStr, /* Features */
+		NULL, /* void *DisInfo */
+		0, /* TagType */
+		NULL, /* LLVMOpInfoCallback GetOpInfo */
+		symbol_lookup_cb /* LLVMSymbolLookupCallback SymbolLookUp */
+	);
+
+	if(context == NULL) {
+		printf("ERROR: LLVMCreateDisasm(\"%s\", \"%s\", ...)\n", triplet, FeaturesStr);
+		goto cleanup;
 	}
 
-	return -1;
+	instr_len = LLVMDisasmInstruction(
+		context, /* disasm context */
+		data, /* source data */
+		len, /* length of source data */
+		addr, /* address */
+		result, /* output buf */
+		1024 /* size of output buf */
+	);
+
+	if(instr_len <= 0) {
+		//printf("LLVMDisasmInstruction() returned %zu\n", instr_len);
+		goto cleanup;
+	}
+
+	rc = 0;
+	cleanup:
+	if(context) {
+		LLVMDisasmDispose(context);
+		context = NULL;
+	}
+	return rc;
 }
 
-extern "C" int disassemble(uint32_t addr, uint8_t *data, int len, char *result)
+/* this uses just the LLVM C API */
+extern "C" int disassemble_c(uint32_t addr, uint8_t *data, int len, char *result)
 {
 	int rc = -1;
 	static LLVMDisasmContextRef context = NULL;
@@ -226,7 +188,7 @@ extern "C" int disassemble(uint32_t addr, uint8_t *data, int len, char *result)
 		instead, use aarch64, and specify features */
 
 	/* aarch64 features as of 10.0.1:
-		bti, ccdp, crc, crypto, dotprod, fp16fml, fparmv8, fullfp16,
+		bti, ccdp, crc, crypto, dotprod, fp16fml, fp-armv8, fullfp16,
 		mte, neon, predres, rand, ras, rcpc, sb, sha3, sm4, spe,
 		specrestrict, ssbs, tme, v8.1a, v8.2a, v8.3a, v8.4a, v8.5a
 
@@ -247,27 +209,27 @@ extern "C" int disassemble(uint32_t addr, uint8_t *data, int len, char *result)
 		https://github.com/llvm-mirror/llvm/tree/master/test/MC/Disassembler/AArch64
 	*/
 	#if defined(AARCH64_ARMV8)
-	triplet = "aarch64-none-elf";
+	triplet = "aarch64";
 	features_str = "";
 	#elif defined(AARCH64_ARMV8_1A)
-	triplet = "aarch64-none-elf";
+	triplet = "aarch64";
 	features_str = "+v8.1a";
 	#elif defined(AARCH64_ARMV8_2A)
-	triplet = "aarch64-none-elf";
+	triplet = "aarch64";
 	features_str = "+v8.2a";
 	#elif defined(AARCH64_ARMV8_3A)
-	triplet = "aarch64-none-elf";
+	triplet = "aarch64";
 	features_str = "+v8.3a";
 	#elif defined(AARCH64_ARMV8_4A)
-	triplet = "aarch64-none-elf";
+	triplet = "aarch64";
 	features_str = "+v8.4a";
 	#elif defined(AARCH64_ARMV8_5A)
-	triplet = "aarch64-none-elf";
+	triplet = "aarch64";
 	features_str = "+v8.5a";
 	#elif defined(AARCH64_ARMV8_ALL)
-	triplet = "aarch64-none-elf";
+	triplet = "aarch64";
 	features_str =
-		"+v8.5a,+bti,+ccdp,+crc,+crypto,+dotprod,+fp16fml,"
+		"+v8.5a,+bti,+ccdp,+crc,+crypto,+dotprod,+fp-armv8,+fp16fml,"
 		"+fullfp16,+mte,+neon,+predres,+rand,+ras,+rcpc,+sb,"
 		"+sha3,+sm4,+spe,+specrestrict,+ssbs,+tme";
 	#endif
@@ -278,6 +240,7 @@ extern "C" int disassemble(uint32_t addr, uint8_t *data, int len, char *result)
 		LLVMInitializeAllAsmParsers();
 		LLVMInitializeAllDisassemblers();
 
+		//printf("features_str: %s\n", features_str);
 		context = LLVMCreateDisasmCPUFeatures (
 			triplet, /* triple */
 			"", /* CPU */

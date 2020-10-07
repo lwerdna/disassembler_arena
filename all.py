@@ -27,16 +27,20 @@ if __name__ == '__main__':
 	data_strs = list(map(lambda x: struct.pack('B', x), data_ints))
 
 	hex_strs = list(map(lambda x: '%02X'%x, data_ints))
-	data_pretty = ''.join(hex_strs)
-	data_pretty_ = ''.join(reversed(hex_strs))
+	data_pretty = ' '.join(hex_strs)
+	data_pretty_ = ' '.join(reversed(hex_strs))
 
 	data_bytes = b''.join(data_strs)
 	data_bytes_ = b''.join(reversed(data_strs))
 
 	libs = filter(lambda fname: re.match(r'.*\.so$', fname), os.listdir('.'))
 
-	print('%s' % (data_pretty))
+	col1_width = 32
+	col2_width = 40
+	col3_width = 40
+
+	print('%s%s%s' % (' '*col1_width, data_pretty.ljust(col2_width), data_pretty_.ljust(col3_width)))
 	for lib in sorted(libs):
-		print(lib.ljust(32)+' ', end='', flush=True)
-		print(('%s: %s' % (data_pretty, disasm(lib, data_bytes).rstrip())).ljust(40), end='')
-		print(('%s: %s' % (data_pretty_, disasm(lib, data_bytes_).rstrip())))
+		print(lib.ljust(col1_width), end='', flush=True)
+		print('%s' % disasm(lib, data_bytes).rstrip().ljust(col2_width), end='')
+		print('%s' % disasm(lib, data_bytes_).rstrip())
