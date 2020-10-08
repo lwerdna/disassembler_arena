@@ -96,34 +96,38 @@ extern "C" int disassemble(uint32_t addr, uint8_t *data, int len, char *result)
 	bool initialized = false;
 	size_t instr_len;
 
-	const char *FeaturesStr;
 	#if defined(AARCH64_ARMV8)
 	triplet = "aarch64-none-elf";
-	FeaturesStr = "";
+	features = "";
 	#elif defined(AARCH64_ARMV8_1A)
 	triplet = "aarch64-none-elf";
-	FeaturesStr = "+v8.1a";
+	features = "+v8.1a";
 	#elif defined(AARCH64_ARMV8_2A)
 	triplet = "aarch64-none-elf";
-	FeaturesStr = "+v8.2a";
+	features = "+v8.2a";
 	#elif defined(AARCH64_ARMV8_3A)
 	triplet = "aarch64-none-elf";
-	FeaturesStr = "+v8.3a";
+	features = "+v8.3a";
 	#elif defined(AARCH64_ARMV8_4A)
 	triplet = "aarch64-none-elf";
-	FeaturesStr = "+v8.4a";
+	features = "+v8.4a";
 	#elif defined(AARCH64_ARMV8_5A)
 	triplet = "aarch64-none-elf";
-	FeaturesStr = "+v8.5a";
+	features = "+v8.5a";
 	#elif defined(AARCH64_ARMV8_ALL)
 	triplet = "aarch64-none-elf";
-	FeaturesStr =
+	features =
 		"+v8.5a,+bti,+ccdp,+crc,+crypto,+dotprod,+fp-armv8,+fp16fml,"
 		"+fullfp16,+mte,+neon,+predres,+rand,+ras,+rcpc,+sb,"
 		"+sha3,+sm4,+spe,+specrestrict,+ssbs,+tme";
 	#elif defined(ARM_THUMB)
 	triplet = "thumbv7-none-gnueabi";
-	FeaturesStr = "+v8.5a";
+	features = "+v8.5a";
+//		"+crypto,+dotprod,+fp16fml,+fullfp16,"
+//		"+neon,+ras,+sb,+v8.5a";
+	#elif defined(ARMV7)
+	triplet = "armv7-eabi";
+	features = "";
 //		"+crypto,+dotprod,+fp16fml,+fullfp16,"
 //		"+neon,+ras,+sb,+v8.5a";
 	#endif
@@ -141,10 +145,12 @@ extern "C" int disassemble(uint32_t addr, uint8_t *data, int len, char *result)
 		addr, data[0], data[1], data[2], data[3], len, options);
 	*/
 
+	//printf("using triplet: %s\n", triplet);
+	//printf("using features: %s\n", features);
 	context = LLVMCreateDisasmCPUFeatures (
 		triplet, /* triple */
 		"", /* CPU */
-		FeaturesStr, /* Features */
+		features, /* Features */
 		NULL, /* void *DisInfo */
 		0, /* TagType */
 		NULL, /* LLVMOpInfoCallback GetOpInfo */
@@ -152,10 +158,11 @@ extern "C" int disassemble(uint32_t addr, uint8_t *data, int len, char *result)
 	);
 
 	if(context == NULL) {
-		printf("ERROR: LLVMCreateDisasm(\"%s\", \"%s\", ...)\n", triplet, FeaturesStr);
+		printf("ERROR: LLVMCreateDisasm(\"%s\", \"%s\", ...)\n", triplet, features);
 		goto cleanup;
 	}
 
+	//printf("sending %d bytes: %02X %02X %02X %02X\n", len, data[0], data[1], data[2], data[3]);
 	instr_len = LLVMDisasmInstruction(
 		context, /* disasm context */
 		data, /* source data */

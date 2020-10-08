@@ -10,7 +10,7 @@
 
 #ifdef ARM
 cs_arch arch = (cs_arch)CS_ARCH_ARM;
-cs_mode mode = (cs_mode)(CS_MODE_BIG_ENDIAN | CS_MODE_ARM);
+cs_mode mode = (cs_mode)(CS_MODE_ARM);
 #endif
 
 	#ifdef ARM_V8
