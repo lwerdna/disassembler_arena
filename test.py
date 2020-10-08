@@ -17,11 +17,16 @@ def disasm(sopath, data, addr=0):
 	return tmp
 
 if __name__ == '__main__':
-	# 1f 20 03 d5 is little-endian instruction word 0xd503201f is nop
+	# 1f 20 03 d5 is little-endian instruction word 0xd503201f is nop in aarch64
 	assert disasm('libopcodes_aarch64.so', b'\x1f\x20\x03\xd5') == 'nop'
 	assert disasm('libopcodes_aarch64_ilp32.so', b'\x1f\x20\x03\xd5') == 'nop'
 	assert disasm('capstone_aarch64.so', b'\x1f\x20\x03\xd5') == 'nop'
 	assert disasm('llvm_armv8_all.so', b'\x1f\x20\x03\xd5') == 'nop'
+
+	# 00 bf is little-endian instruction word 0xbf00 is 16-bit nop in thumb
+	assert disasm('binja_thumb2.so', b'\xbf\x00') == 'nop'
+	assert disasm('capstone_arm_thumb.so', b'\xbf\x00') == 'nop'
+	assert disasm('llvm_thumb.so', b'\xbf\x00') == 'nop'
 
 	# this is stz2g v8.5 memory tagging feature, earlier versions should fail
 	# D9FFF7FF "stz2g.."

@@ -40,6 +40,7 @@ if __name__ == '__main__':
 	col3_width = 40
 
 	print('%s%s%s' % (' '*col1_width, data_pretty.ljust(col2_width), data_pretty_.ljust(col3_width)))
+	print('%s%s%s' % (' '*col1_width, ('-'*len(data_pretty)).ljust(col2_width), ('-'*len(data_pretty)).ljust(col3_width)))
 	for lib in sorted(libs):
 		print(lib.ljust(col1_width), end='', flush=True)
 		print('%s' % disasm(lib, data_bytes).rstrip().ljust(col2_width), end='')

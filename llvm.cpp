@@ -92,36 +92,40 @@ extern "C" int disassemble(uint32_t addr, uint8_t *data, int len, char *result)
 {
 	int rc = -1;
 	LLVMDisasmContextRef context;
-	const char *triplet = "aarch64-none-elf";
+	const char *triplet, *features;
 	bool initialized = false;
 	size_t instr_len;
 
-	string TripleName, ArchName;
 	const char *FeaturesStr;
 	#if defined(AARCH64_ARMV8)
-	TripleName = ArchName = "aarch64";
+	triplet = "aarch64-none-elf";
 	FeaturesStr = "";
 	#elif defined(AARCH64_ARMV8_1A)
-	TripleName = ArchName = "aarch64";
+	triplet = "aarch64-none-elf";
 	FeaturesStr = "+v8.1a";
 	#elif defined(AARCH64_ARMV8_2A)
-	TripleName = ArchName = "aarch64";
+	triplet = "aarch64-none-elf";
 	FeaturesStr = "+v8.2a";
 	#elif defined(AARCH64_ARMV8_3A)
-	TripleName = ArchName = "aarch64";
+	triplet = "aarch64-none-elf";
 	FeaturesStr = "+v8.3a";
 	#elif defined(AARCH64_ARMV8_4A)
-	TripleName = ArchName = "aarch64";
+	triplet = "aarch64-none-elf";
 	FeaturesStr = "+v8.4a";
 	#elif defined(AARCH64_ARMV8_5A)
-	TripleName = ArchName = "aarch64";
+	triplet = "aarch64-none-elf";
 	FeaturesStr = "+v8.5a";
 	#elif defined(AARCH64_ARMV8_ALL)
-	TripleName = ArchName = "aarch64";
+	triplet = "aarch64-none-elf";
 	FeaturesStr =
 		"+v8.5a,+bti,+ccdp,+crc,+crypto,+dotprod,+fp-armv8,+fp16fml,"
 		"+fullfp16,+mte,+neon,+predres,+rand,+ras,+rcpc,+sb,"
 		"+sha3,+sm4,+spe,+specrestrict,+ssbs,+tme";
+	#elif defined(ARM_THUMB)
+	triplet = "thumbv7-none-gnueabi";
+	FeaturesStr = "+v8.5a";
+//		"+crypto,+dotprod,+fp16fml,+fullfp16,"
+//		"+neon,+ras,+sb,+v8.5a";
 	#endif
 
 	if(!initialized) {

@@ -45,6 +45,9 @@ extern "C" int disassemble(uint32_t addr_, uint8_t *data, int len, char *result)
 	BNGetInstructionText(arch, (const uint8_t *)data, 0, &nBytesDisasm,
 	  &ttResult, &ttCount);
 
+	if(ttCount <= 0)
+		return -1;
+
 	strcpy(result, "");
 	for(int i=0; i<ttCount; ++i)
 		strcat(result, ttResult[i].text);

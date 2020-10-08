@@ -15,23 +15,27 @@ TARGETS_LIBOPCODES_PPC = libopcodes_ppc.so libopcodes_ppc64.so libopcodes_ppc_40
 
 # capstone
 TARGETS_CAPSTONE_INTEL = capstone_x86.so capstone_x64.so
-TARGETS_CAPSTONE_ARM = capstone_arm.so capstone_arm_v8.so capstone_arm_thumb.so capstone_arm_thumb_mclass.so capstone_arm_thumb_mclass_v8.so capstone_aarch64.so
+TARGETS_CAPSTONE_ARM = capstone_arm.so capstone_arm_v8.so
+TARGETS_CAPSTONE_THUMB = capstone_arm_thumb.so capstone_arm_thumb_mclass.so capstone_arm_thumb_mclass_v8.so
 TARGETS_CAPSTONE_AARCH64 = capstone_aarch64.so
 TARGETS_CAPSTONE_PPC = capstone_ppc64.so
 
 # llvm
 #TARGETS_LLVM_AARCH64 = llvm_armv8.so llvm.cpp llvm_armv8_1a.so llvm.cpp llvm_armv8_2a.so llvm.cpp llvm_armv8_3a.so llvm.cpp llvm_armv8_4a.so llvm.cpp llvm_armv8_5a.so llvm.cpp llvm_armv8_all.so
+TARGETS_LLVM_THUMB = llvm_thumb.so
 TARGETS_LLVM_AARCH64 = llvm_armv8_all.so
 
 # binary ninja
 TARGETS_BINJA_INTEL = binja_x86.so binja_x64.so
-TARGETS_BINJA_ARM = binja_armv7.so binja_thumb2.so
+TARGETS_BINJA_ARM = binja_armv7.so
+TARGETS_BINJA_THUMB = binja_thumb2.so
 TARGETS_BINJA_AARCH64 = binja_aarch64.so
 TARGETS_BINJA_PPC = binja_ppc.so
 TARGETS_BINJA_MIPS = binja_mips32.so
 
 TARGETS_INTEL = $(TARGETS_LIBOPCODES_INTEL) $(TARGETS_CAPSTONE_INTEL) $(TARGETS_BINJA_INTEL)
-TARGETS_ARM = $(TARGETS_LIBOPCODES_ARM) $(TARGETS_CAPSTONE_ARM) $(TARGETS_LLVM_ARM) $(TARGETS_BINJA_ARM)
+TARGETS_ARM = $(TARGETS_LIBOPCODES_ARM) $(TARGETS_CAPSTONE_ARM) $(TARGETS_LLVM_ARM) $(TARGETS_BINJA_ARM) $(TARGETS_LLVM_ARM)
+TARGETS_THUMB = $(TARGETS_CAPSTONE_THUMB) $(TARGETS_LLVM_THUMB) $(TARGETS_BINJA_THUMB)
 TARGETS_AARCH64 = $(TARGETS_LIBOPCODES_AARCH64) $(TARGETS_CAPSTONE_AARCH64) $(TARGETS_LLVM_AARCH64) $(TARGETS_BINJA_AARCH64)
 TARGETS_PPC = $(TARGETS_PPCD_PPC) $(TARGETS_LIBOPCODES_PPC) $(TARGETS_CAPSTONE_PPC) $(TARGETS_BINJA_PPC)
 TARGETS_MIPS = $(TARGETS_BINJA_MIPS)
@@ -41,6 +45,8 @@ all: $(TARGETS_INTEL) $(TARGETS_ARM) $(TARGETS_AARCH64) $(TARGETS_PPC) $(TARGETS
 intel: $(TARGETS_INTEL)
 
 arm: $(TARGETS_ARM)
+
+thumb: $(TARGETS_THUMB)
 
 aarch64: $(TARGETS_AARCH64)
 
@@ -256,6 +262,13 @@ PATH_LLVM =
 
 LLVM_COMPILE_FLAGS = $(shell llvm-config --cxxflags)
 LLVM_LINK_FLAGS = $(shell llvm-config --ldflags) $(shell llvm-config --libs) $(shell llvm-config --system-libs)
+
+# thumb
+
+llvm_thumb.so: llvm.cpp utils.o
+	g++ $(CPPFLAGS) $(LLVM_COMPILE_FLAGS) $(LLVM_LINK_FLAGS) utils.o -DARM_THUMB -shared -o llvm_thumb.so llvm.cpp
+
+# aarch64
 
 llvm_armv8.so: llvm.cpp utils.o
 	g++ $(CPPFLAGS) $(LLVM_COMPILE_FLAGS) $(LLVM_LINK_FLAGS) utils.o -DAARCH64_ARMV8 -shared -o llvm_armv8.so llvm.cpp
