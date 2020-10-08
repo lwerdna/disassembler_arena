@@ -14,9 +14,9 @@ const char *archmode = "x86";
 #elif defined(X64)
 const char *archmode = "x86_64";
 #elif defined(ARMV7)
-const char *archmode = "armv7eb";
+const char *archmode = "armv7";
 #elif defined(THUMB2)
-const char *archmode = "thumb2eb";
+const char *archmode = "thumb2";
 #elif defined(PPC)
 const char *archmode = "ppc";
 #elif defined(AARCH64)
