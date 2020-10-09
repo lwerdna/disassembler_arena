@@ -33,7 +33,7 @@ if __name__ == '__main__':
 	data_bytes = b''.join(data_strs)
 	data_bytes_ = b''.join(reversed(data_strs))
 
-	libs = filter(lambda fname: re.match(r'.*\.so$', fname), os.listdir('.'))
+	libs = list(filter(lambda fname: re.match(r'.*\.so$', fname), os.listdir('.')))
 
 	col1_width = 32
 	col2_width = 40
@@ -41,7 +41,11 @@ if __name__ == '__main__':
 
 	print('%s%s%s' % (' '*col1_width, data_pretty.ljust(col2_width), data_pretty_.ljust(col3_width)))
 	print('%s%s%s' % (' '*col1_width, ('-'*len(data_pretty)).ljust(col2_width), ('-'*len(data_pretty)).ljust(col3_width)))
-	for lib in sorted(libs):
-		print(lib.ljust(col1_width), end='', flush=True)
-		print('%s' % disasm(lib, data_bytes).rstrip().ljust(col2_width), end='')
-		print('%s' % disasm(lib, data_bytes_).rstrip())
+
+	addresses = [0, 0xAAAAAAA0, 0xAAAAAAA4, 0xAAAAAAA8, 0xAAAAAAAC, 0xAAAAAAB0]
+	for addr in addresses:
+		for lib in sorted(libs):
+			print(lib.ljust(col1_width), end='', flush=True)
+			print('%X: %s' % (addr, disasm(lib, data_bytes, addr).rstrip().ljust(col2_width)), end='')
+			print('%X: %s' % (addr, disasm(lib, data_bytes_, addr).rstrip()))
+		if len(addresses)>1: print('')
