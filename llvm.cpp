@@ -96,7 +96,39 @@ extern "C" int disassemble(uint32_t addr, uint8_t *data, int len, char *result)
 	bool initialized = false;
 	size_t instr_len;
 
-	#if defined(AARCH64_ARMV8)
+	/* arm / A32 */
+	#if defined(ARM_NAKED)
+	triplet = "arm-none-elf";
+	features = "";
+	#elif defined(ARM_V8_1A)
+	triplet = "arm-none-elf";
+	features = "+v8.1a";
+	#elif defined(ARM_V8_2A)
+	triplet = "arm-none-elf";
+	features = "+v8.2a";
+	#elif defined(ARM_V8_3A)
+	triplet = "arm-none-elf";
+	features = "+v8.3a";
+	#elif defined(ARM_V8_4A)
+	triplet = "arm-none-elf";
+	features = "+v8.4a";
+	#elif defined(ARM_V8_5A)
+	triplet = "arm-none-elf";
+	features = "+v8.5a";
+	#elif defined(ARM_V8_ALL)
+	triplet = "arm-none-elf";
+	features =
+		"+v8.5a,+crc,+crypto,+dotprod,+fp-armv8,+fp16fml,"
+		"+fullfp16,+neon,+ras,+sb";
+	/* thumb / T32 */
+	#elif defined(ARM_THUMB_NAKED)
+	triplet = "thumbv7-none-gnueabi";
+	features = "";
+	#elif defined(ARM_THUMB_V8_5A)
+	triplet = "thumbv7-none-gnueabi";
+	features = "+v8.5a";
+	/* 64-bit / AARCH64 */
+	#elif defined(AARCH64_ARMV8)
 	triplet = "aarch64-none-elf";
 	features = "";
 	#elif defined(AARCH64_ARMV8_1A)
@@ -120,16 +152,8 @@ extern "C" int disassemble(uint32_t addr, uint8_t *data, int len, char *result)
 		"+v8.5a,+bti,+ccdp,+crc,+crypto,+dotprod,+fp-armv8,+fp16fml,"
 		"+fullfp16,+mte,+neon,+predres,+rand,+ras,+rcpc,+sb,"
 		"+sha3,+sm4,+spe,+specrestrict,+ssbs,+tme";
-	#elif defined(ARM_THUMB)
-	triplet = "thumbv7-none-gnueabi";
-	features = "+v8.5a";
-//		"+crypto,+dotprod,+fp16fml,+fullfp16,"
-//		"+neon,+ras,+sb,+v8.5a";
-	#elif defined(ARMV7)
-	triplet = "armv7-eabi";
-	features = "";
-//		"+crypto,+dotprod,+fp16fml,+fullfp16,"
-//		"+neon,+ras,+sb,+v8.5a";
+
+	/* done */
 	#endif
 
 	if(!initialized) {
@@ -219,31 +243,11 @@ extern "C" int disassemble_c(uint32_t addr, uint8_t *data, int len, char *result
 		https://github.com/llvm-mirror/llvm/blob/master/tools/llvm-mc/llvm-mc.cpp
 		https://github.com/llvm-mirror/llvm/tree/master/test/MC/Disassembler/AArch64
 	*/
-	#if defined(AARCH64_ARMV8)
-	triplet = "aarch64";
-	features_str = "";
-	#elif defined(AARCH64_ARMV8_1A)
-	triplet = "aarch64";
-	features_str = "+v8.1a";
-	#elif defined(AARCH64_ARMV8_2A)
-	triplet = "aarch64";
-	features_str = "+v8.2a";
-	#elif defined(AARCH64_ARMV8_3A)
-	triplet = "aarch64";
-	features_str = "+v8.3a";
-	#elif defined(AARCH64_ARMV8_4A)
-	triplet = "aarch64";
-	features_str = "+v8.4a";
-	#elif defined(AARCH64_ARMV8_5A)
-	triplet = "aarch64";
-	features_str = "+v8.5a";
-	#elif defined(AARCH64_ARMV8_ALL)
 	triplet = "aarch64";
 	features_str =
 		"+v8.5a,+bti,+ccdp,+crc,+crypto,+dotprod,+fp-armv8,+fp16fml,"
 		"+fullfp16,+mte,+neon,+predres,+rand,+ras,+rcpc,+sb,"
 		"+sha3,+sm4,+spe,+specrestrict,+ssbs,+tme";
-	#endif
 
 	if(context == NULL) {
 		LLVMInitializeAllTargetInfos();

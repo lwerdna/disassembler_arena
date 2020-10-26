@@ -21,10 +21,9 @@ TARGETS_CAPSTONE_AARCH64 = capstone_aarch64.so
 TARGETS_CAPSTONE_PPC = capstone_ppc64.so
 
 # llvm
-#TARGETS_LLVM_AARCH64 = llvm_armv8.so llvm.cpp llvm_armv8_1a.so llvm.cpp llvm_armv8_2a.so llvm.cpp llvm_armv8_3a.so llvm.cpp llvm_armv8_4a.so llvm.cpp llvm_armv8_5a.so llvm.cpp llvm_armv8_all.so
-TARGETS_LLVM_ARM = llvm_arm.so
+TARGETS_LLVM_ARM = llvm_arm.so llvm_arm_v8_1a.so llvm_arm_v8_2a.so llvm_arm_v8_3a.so llvm_arm_v8_4a.so llvm_arm_v8_5a.so llvm_arm_v8_all.so
 TARGETS_LLVM_THUMB = llvm_thumb.so
-TARGETS_LLVM_AARCH64 = llvm_armv8_all.so
+TARGETS_LLVM_AARCH64 = llvm_aarch64.so llvm_aarch64_1a.so llvm_aarch64_2a.so llvm_aarch64_3a.so llvm_aarch64_4a.so llvm_aarch64_5a.so llvm_aarch64_all.so
 
 # binary ninja
 TARGETS_BINJA_INTEL = binja_x86.so binja_x64.so
@@ -267,7 +266,25 @@ LLVM_LINK_FLAGS = $(shell llvm-config --ldflags) $(shell llvm-config --libs) $(s
 # arm
 
 llvm_arm.so: llvm.cpp utils.o
-	g++ $(CPPFLAGS) $(LLVM_COMPILE_FLAGS) $(LLVM_LINK_FLAGS) utils.o -DARMV7 -shared -o llvm_arm.so llvm.cpp
+	g++ $(CPPFLAGS) $(LLVM_COMPILE_FLAGS) $(LLVM_LINK_FLAGS) utils.o -DARM_NAKED -shared -o llvm_arm.so llvm.cpp
+
+llvm_arm_v8_1a.so: llvm.cpp utils.o
+	g++ $(CPPFLAGS) $(LLVM_COMPILE_FLAGS) $(LLVM_LINK_FLAGS) utils.o -DARM_V8_1A -shared -o llvm_arm_v8_1a.so llvm.cpp
+
+llvm_arm_v8_2a.so: llvm.cpp utils.o
+	g++ $(CPPFLAGS) $(LLVM_COMPILE_FLAGS) $(LLVM_LINK_FLAGS) utils.o -DARM_V8_2A -shared -o llvm_arm_v8_2a.so llvm.cpp
+
+llvm_arm_v8_3a.so: llvm.cpp utils.o
+	g++ $(CPPFLAGS) $(LLVM_COMPILE_FLAGS) $(LLVM_LINK_FLAGS) utils.o -DARM_V8_3A -shared -o llvm_arm_v8_3a.so llvm.cpp
+
+llvm_arm_v8_4a.so: llvm.cpp utils.o
+	g++ $(CPPFLAGS) $(LLVM_COMPILE_FLAGS) $(LLVM_LINK_FLAGS) utils.o -DARM_V8_4A -shared -o llvm_arm_v8_4a.so llvm.cpp
+
+llvm_arm_v8_5a.so: llvm.cpp utils.o
+	g++ $(CPPFLAGS) $(LLVM_COMPILE_FLAGS) $(LLVM_LINK_FLAGS) utils.o -DARM_V8_5A -shared -o llvm_arm_v8_5a.so llvm.cpp
+
+llvm_arm_v8_all.so: llvm.cpp utils.o
+	g++ $(CPPFLAGS) $(LLVM_COMPILE_FLAGS) $(LLVM_LINK_FLAGS) utils.o -DARM_V8_ALL -shared -o llvm_arm_v8_all.so llvm.cpp
 
 # thumb
 
@@ -276,26 +293,26 @@ llvm_thumb.so: llvm.cpp utils.o
 
 # aarch64
 
-llvm_armv8.so: llvm.cpp utils.o
-	g++ $(CPPFLAGS) $(LLVM_COMPILE_FLAGS) $(LLVM_LINK_FLAGS) utils.o -DAARCH64_ARMV8 -shared -o llvm_armv8.so llvm.cpp
+llvm_aarch64.so: llvm.cpp utils.o
+	g++ $(CPPFLAGS) $(LLVM_COMPILE_FLAGS) $(LLVM_LINK_FLAGS) utils.o -DAARCH64_ARMV8 -shared -o llvm_aarch64.so llvm.cpp
 
-llvm_armv8_1a.so: llvm.cpp utils.o
-	g++ $(CPPFLAGS) $(LLVM_COMPILE_FLAGS) $(LLVM_LINK_FLAGS) utils.o -DAARCH64_ARMV8_1A -shared -o llvm_armv8_1a.so llvm.cpp
+llvm_aarch64_1a.so: llvm.cpp utils.o
+	g++ $(CPPFLAGS) $(LLVM_COMPILE_FLAGS) $(LLVM_LINK_FLAGS) utils.o -DAARCH64_ARMV8_1A -shared -o llvm_aarch64_1a.so llvm.cpp
 
-llvm_armv8_2a.so: llvm.cpp utils.o
-	g++ $(CPPFLAGS) $(LLVM_COMPILE_FLAGS) $(LLVM_LINK_FLAGS) utils.o -DAARCH64_ARMV8_2A -shared -o llvm_armv8_2a.so llvm.cpp
+llvm_aarch64_2a.so: llvm.cpp utils.o
+	g++ $(CPPFLAGS) $(LLVM_COMPILE_FLAGS) $(LLVM_LINK_FLAGS) utils.o -DAARCH64_ARMV8_2A -shared -o llvm_aarch64_2a.so llvm.cpp
 
-llvm_armv8_3a.so: llvm.cpp utils.o
-	g++ $(CPPFLAGS) $(LLVM_COMPILE_FLAGS) $(LLVM_LINK_FLAGS) utils.o -DAARCH64_ARMV8_3A -shared -o llvm_armv8_3a.so llvm.cpp
+llvm_aarch64_3a.so: llvm.cpp utils.o
+	g++ $(CPPFLAGS) $(LLVM_COMPILE_FLAGS) $(LLVM_LINK_FLAGS) utils.o -DAARCH64_ARMV8_3A -shared -o llvm_aarch64_3a.so llvm.cpp
 
-llvm_armv8_4a.so: llvm.cpp utils.o
-	g++ $(CPPFLAGS) $(LLVM_COMPILE_FLAGS) $(LLVM_LINK_FLAGS) utils.o -DAARCH64_ARMV8_4A -shared -o llvm_armv8_4a.so llvm.cpp
+llvm_aarch64_4a.so: llvm.cpp utils.o
+	g++ $(CPPFLAGS) $(LLVM_COMPILE_FLAGS) $(LLVM_LINK_FLAGS) utils.o -DAARCH64_ARMV8_4A -shared -o llvm_aarch64_4a.so llvm.cpp
 
-llvm_armv8_5a.so: llvm.cpp utils.o
-	g++ $(CPPFLAGS) $(LLVM_COMPILE_FLAGS) $(LLVM_LINK_FLAGS) utils.o -DAARCH64_ARMV8_5A -shared -o llvm_armv8_5a.so llvm.cpp
+llvm_aarch64_5a.so: llvm.cpp utils.o
+	g++ $(CPPFLAGS) $(LLVM_COMPILE_FLAGS) $(LLVM_LINK_FLAGS) utils.o -DAARCH64_ARMV8_5A -shared -o llvm_aarch64_5a.so llvm.cpp
 
-llvm_armv8_all.so: llvm.cpp utils.o
-	g++ $(CPPFLAGS) $(LLVM_COMPILE_FLAGS) $(LLVM_LINK_FLAGS) utils.o -DAARCH64_ARMV8_ALL -shared -o llvm_armv8_all.so llvm.cpp
+llvm_aarch64_all.so: llvm.cpp utils.o
+	g++ $(CPPFLAGS) $(LLVM_COMPILE_FLAGS) $(LLVM_LINK_FLAGS) utils.o -DAARCH64_ARMV8_ALL -shared -o llvm_aarch64_all.so llvm.cpp
 
 #------------------------------------------------------------------------------
 # BINARY NINJA

@@ -43,6 +43,7 @@ if __name__ == '__main__':
 	print('%s%s%s' % (' '*col1_width, ('-'*len(data_pretty)).ljust(col2_width), ('-'*len(data_pretty)).ljust(col3_width)))
 
 	addresses = [0, 0xAAAAAAA0, 0xAAAAAAA4, 0xAAAAAAA8, 0xAAAAAAAC, 0xAAAAAAB0]
+	addresses = [0]
 	for addr in addresses:
 		for lib in sorted(libs):
 			print(lib.ljust(col1_width), end='', flush=True)

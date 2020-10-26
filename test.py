@@ -24,11 +24,11 @@ if __name__ == '__main__':
 		assert disasm('libopcodes_aarch64.so', b'\x1f\x20\x03\xd5') == 'nop'
 		assert disasm('libopcodes_aarch64_ilp32.so', b'\x1f\x20\x03\xd5') == 'nop'
 		assert disasm('capstone_aarch64.so', b'\x1f\x20\x03\xd5') == 'nop'
-		assert disasm('llvm_armv8_all.so', b'\x1f\x20\x03\xd5') == 'nop'
+		assert disasm('llvm_aarch64_all.so', b'\x1f\x20\x03\xd5') == 'nop'
 
 		# this is stz2g v8.5 memory tagging feature, earlier versions should fail
 		# D9FFF7FF "stz2g.."
-		assert disasm('llvm_armv8_all.so', b'\xff\xf7\xff\xd9') == 'stz2g sp, [sp], #-16'
+		assert disasm('llvm_aarch64_all.so', b'\xff\xf7\xff\xd9') == 'stz2g sp, [sp], #-16'
 
 	if arch in ['thumb', 'thumb2']:
 		# 00 bf is little-endian instruction word 0xbf00 is 16-bit nop in thumb
