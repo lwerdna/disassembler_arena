@@ -186,6 +186,8 @@ extern "C" int disassemble(uint32_t addr, uint8_t *data, int len, char *result)
 		goto cleanup;
 	}
 
+	LLVMSetDisasmOptions(context, LLVMDisassembler_Option_PrintImmHex);
+
 	//printf("sending %d bytes: %02X %02X %02X %02X\n", len, data[0], data[1], data[2], data[3]);
 	instr_len = LLVMDisasmInstruction(
 		context, /* disasm context */
