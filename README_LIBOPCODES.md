@@ -25,3 +25,4 @@ metag, ia64, ip2k, epiphany, mt, pj, avr, bfin, cr16, cr16c, crx, cris, riscv,
 rl78, rx, s390, score, mmix, xstormy16, msp430, xc16x, xgate, xtensa, z80,
 lm32, microblaze, tilepro, tilegx, aarch64, nios2, visium, wasm32, pru, last
 
+to change to hex immediates for aarch64, edit <binutils>/opcodes/aarch64-opc.c replacing all #%d with #%x

@@ -1,5 +1,5 @@
 CPPFLAGS =
-CPPFLAGS += -I/usr/libopcodesal/include -std=c++11 -O0 -g
+CPPFLAGS += -std=c++11 -O0 -g
 BFDFLAGS = -lbfd -liberty -lopcodes -lz
 
 .PHONY: all
