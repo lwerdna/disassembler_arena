@@ -11,7 +11,7 @@ static uint32_t bswap32(uint32_t data)
            ((data << 24)             );
 }
 
-extern "C" int disassemble(uint32_t addr, uint8_t *data, int len, char *result)
+extern "C" int disassemble(uint64_t addr, uint8_t *data, int len, char *result)
 {
 	PPCD_CB disa;
 

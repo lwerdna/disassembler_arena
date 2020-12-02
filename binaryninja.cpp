@@ -25,7 +25,7 @@ const char *archmode = "aarch64";
 const char *archmode = "mips32";
 #endif
 
-extern "C" int disassemble(uint32_t addr_, uint8_t *data, int len, char *result)
+extern "C" int disassemble(uint64_t addr, uint8_t *data, int len, char *result)
 {
 	int rc = -1;
 
@@ -42,7 +42,7 @@ extern "C" int disassemble(uint32_t addr_, uint8_t *data, int len, char *result)
 	/* actually disassemble now */
 	BNInstructionTextToken *ttResult = NULL;
 	size_t ttCount, nBytesDisasm=len;
-	BNGetInstructionText(arch, (const uint8_t *)data, 0, &nBytesDisasm,
+	BNGetInstructionText(arch, (const uint8_t *)data, addr, &nBytesDisasm,
 	  &ttResult, &ttCount);
 
 	if(ttCount <= 0)

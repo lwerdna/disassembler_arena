@@ -4,14 +4,17 @@ import os
 import re
 import sys
 import struct
-import ctypes
+from ctypes import *
 
 def disasm(sopath, data, addr=0):
 	# initialize disassembler, if necessary
-	dll = ctypes.CDLL(sopath)
-	cbuf = ctypes.create_string_buffer(256)
+	dll = CDLL(sopath)
+	cbuf = create_string_buffer(256)
 
-	rv = dll.disassemble(addr, data, len(data), ctypes.byref(cbuf))
+	pfunc = dll.disassemble
+	pfunc.restype = c_int
+	pfunc.argtypes = [c_uint64, c_char_p, c_uint, c_void_p]
+	rv = dll.disassemble(addr, data, len(data), byref(cbuf))
 	if rv != 0:
 		tmp = '(error)'
 	else:
@@ -21,9 +24,18 @@ def disasm(sopath, data, addr=0):
 	return tmp
 
 if __name__ == '__main__':
-	data = ''
+	if not sys.argv[1:]:
+		print('call all disassembly .so\'s')
+		print('usage:')
+		print('\t%s <address> <bytes>' % sys.argv[0])
+		print('examples:')
+		print('\t%s 80000000 1f 20 03 d5' % sys.argv[0])
+		sys.exit(-1)
 
-	data_ints = list(map(lambda x: int(x,16), sys.argv[1:]))
+	addr = int(sys.argv[1], 16)
+
+	data = ''
+	data_ints = list(map(lambda x: int(x,16), sys.argv[2:]))
 	data_strs = list(map(lambda x: struct.pack('B', x), data_ints))
 
 	hex_strs = list(map(lambda x: '%02X'%x, data_ints))
@@ -42,11 +54,7 @@ if __name__ == '__main__':
 	print('%s%s%s' % (' '*col1_width, data_pretty.ljust(col2_width), data_pretty_.ljust(col3_width)))
 	print('%s%s%s' % (' '*col1_width, ('-'*len(data_pretty)).ljust(col2_width), ('-'*len(data_pretty)).ljust(col3_width)))
 
-	addresses = [0, 0xAAAAAAA0, 0xAAAAAAA4, 0xAAAAAAA8, 0xAAAAAAAC, 0xAAAAAAB0]
-	addresses = [0]
-	for addr in addresses:
-		for lib in sorted(libs):
-			print(lib.ljust(col1_width), end='', flush=True)
-			print('%X: %s' % (addr, disasm(lib, data_bytes, addr).rstrip().ljust(col2_width)), end='')
-			print('%X: %s' % (addr, disasm(lib, data_bytes_, addr).rstrip()))
-		if len(addresses)>1: print('')
+	for lib in sorted(libs):
+		print(lib.ljust(col1_width), end='', flush=True)
+		print('%X: %s' % (addr, disasm(lib, data_bytes, addr).rstrip().ljust(col2_width)), end='')
+		print('%X: %s' % (addr, disasm(lib, data_bytes_, addr).rstrip()))

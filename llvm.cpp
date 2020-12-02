@@ -88,7 +88,7 @@ symbol_lookup_cb(void *DisInfo, uint64_t ReferenceValue, uint64_t *ReferenceType
 }
 
 /* this uses the LLVM C++ API */
-extern "C" int disassemble(uint32_t addr, uint8_t *data, int len, char *result)
+extern "C" int disassemble(uint64_t addr, uint8_t *data, int len, char *result)
 {
 	int rc = -1;
 	LLVMDisasmContextRef context;

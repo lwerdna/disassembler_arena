@@ -77,7 +77,7 @@ map<struct architecture_machine_pair, disassembler_ftype> am2df;
 int disasm_libopcodes(
 	enum bfd_architecture arch,
 	uint32_t mach,
-	uint32_t addr,
+	uint64_t addr,
 	uint8_t *data,
 	int len,
 	char *result
@@ -158,7 +158,7 @@ int disasm_libopcodes(
 	return 0;
 }
 
-extern "C" int disassemble(uint32_t addr, uint8_t *data, int len, char *result)
+extern "C" int disassemble(uint64_t addr, uint8_t *data, int len, char *result)
 {
 	enum bfd_architecture arch;
 	int machine;
