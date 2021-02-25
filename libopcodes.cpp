@@ -160,6 +160,7 @@ int disasm_libopcodes(
 
 extern "C" int disassemble(uint64_t addr, uint8_t *data, int len, char *result)
 {
+	int rc = -1;
 	enum bfd_architecture arch;
 	int machine;
 
@@ -303,5 +304,6 @@ extern "C" int disassemble(uint64_t addr, uint8_t *data, int len, char *result)
 	machine = bfd_mach_ppc_vle;
 	#endif
 
-	return disasm_libopcodes(arch, machine, addr, data, len, result);
+	rc = disasm_libopcodes(arch, machine, addr, data, len, result);
+	return rc;
 }

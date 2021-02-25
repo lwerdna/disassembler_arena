@@ -4,9 +4,11 @@ import os
 import re
 import sys
 import struct
-from ctypes import *
 
-def disasm(sopath, data, addr=0):
+from subprocess import Popen, PIPE
+
+from ctypes import *
+def disasm_old(sopath, data, addr=0):
 	# initialize disassembler, if necessary
 	dll = CDLL(sopath)
 	cbuf = create_string_buffer(256)
@@ -22,6 +24,24 @@ def disasm(sopath, data, addr=0):
 		tmp = tmp.strip()
 		tmp = tmp.replace('\t', ' ')
 	return tmp
+
+def disasm(sopath, data, addr=0):
+	cmdline = ['call_so', sopath, hex(addr)]
+	for byte in data:
+		cmdline.append(hex(byte))
+	process = Popen(cmdline, stdout=PIPE, stderr=PIPE)
+	(stdout, stderr) = process.communicate()
+	stdout = stdout.decode("utf-8")
+	stderr = stderr.decode("utf-8")
+	process.wait()
+
+	result = stderr
+	if stdout and not stdout.isspace():
+		result = stdout	
+
+	result = result.strip()
+	result = re.sub(r'\s+', ' ', result)
+	return result
 
 if __name__ == '__main__':
 	if not sys.argv[1:]:
