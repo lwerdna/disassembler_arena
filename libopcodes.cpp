@@ -302,6 +302,10 @@ extern "C" int disassemble(uint64_t addr, uint8_t *data, int len, char *result)
 	#elif defined(PPC_VLE)
 	arch = bfd_arch_powerpc;
 	machine = bfd_mach_ppc_vle;
+
+	#elif defined(SH4)
+	arch = bfd_arch_sh;
+	machine = bfd_mach_sh4;
 	#endif
 
 	rc = disasm_libopcodes(arch, machine, addr, data, len, result);
