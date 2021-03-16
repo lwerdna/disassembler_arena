@@ -46,7 +46,7 @@ int main(int ac, char **av)
 		bytes[i] = strtol(av[i+3], 0, 16) & 0xFF;
 	}
 
-	rc = disassemble(0, bytes, 4, distxt);
+	rc = disassemble(addr, bytes, 4, distxt);
 	if(rc >= 0)
 		printf("%s", distxt);
 	else
