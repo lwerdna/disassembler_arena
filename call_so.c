@@ -1,6 +1,12 @@
-// link with libopcodes.cpp
-
-// gcc -g -O0 gofer.c libopcodes_arm_2.so -o gofer
+// given a shared object, address, and bytes
+// resolve and call that object's disassemble function
+//
+// EXAMPLE:
+//  $ ./call_so llvm_aarch64_all.so DEADBEEF 1f 20 03 d5
+//  nop
+//
+// COMPILE:
+//   gcc call_so.c -o call_so
 
 #include <stdio.h>
 #include <stdint.h>

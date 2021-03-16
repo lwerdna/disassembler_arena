@@ -1,16 +1,24 @@
-Compile a collection of shared objects, one for each pair (architecture, disassembler).
+This project aims to compare the output of many disassemblers.
 
-Each exports a simple function:
+It compiles disassemblers into shared objects that you can call easily. The provided Makefile has targets like `intel`, `arm`, `thumb`, `aarch64`, `ppc`, `mips`, `sh4`:
+
+```
+make aarch64
+```
+
+Each shared object exports a simple function:
 
 ```
 extern "C" int disassemble(uint32_t addr, uint8_t *data, int len, char *result)
 ```
 
-Which is easily callable with python. Actually, python all.py is provided as an example. It looks in the current directory for all shared objects and call their disassemble() function with the supplied bytes, reordered too:
+Which is easy to resolve dynamically. See `./call_so.c` and `./call_so.py` for examples.
+
+The utility `all.py` will scan the current directory for shared objects and use `call_so` to invoke their `disassemble()` functions with the supplied address and bytes:
 
 
 ```
-$ ./all.py aa bb cc dd
+$ ./all.py 0 aa bb cc dd
 capstone_aarch64.so              AABBCCDD: orn x29, x6, x27, asr #51     DDCCBBAA: undef
 capstone_ppc64.so                AABBCCDD: lha r21, -0x3323(r27)         DDCCBBAA: stfdu f14, -0x4456(r12)
 capstone_x64.so                  AABBCCDD: stosb byte ptr [rdi], al      DDCCBBAA: fxch st(0), st(4)

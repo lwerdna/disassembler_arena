@@ -7,24 +7,6 @@ import struct
 
 from subprocess import Popen, PIPE
 
-from ctypes import *
-def disasm_old(sopath, data, addr=0):
-	# initialize disassembler, if necessary
-	dll = CDLL(sopath)
-	cbuf = create_string_buffer(256)
-
-	pfunc = dll.disassemble
-	pfunc.restype = c_int
-	pfunc.argtypes = [c_uint64, c_char_p, c_uint, c_void_p]
-	rv = dll.disassemble(addr, data, len(data), byref(cbuf))
-	if rv != 0:
-		tmp = '(error)'
-	else:
-		tmp = cbuf.value.decode('utf-8')
-		tmp = tmp.strip()
-		tmp = tmp.replace('\t', ' ')
-	return tmp
-
 def disasm(sopath, data, addr=0):
 	cmdline = ['call_so', sopath, hex(addr)]
 	for byte in data:
