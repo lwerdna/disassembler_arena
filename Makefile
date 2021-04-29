@@ -10,6 +10,7 @@ TARGETS_PPCD_PPC = ppcd_powerpc_32.so ppcd_powerpc_64.so ppcd_gecko.so ppcd_broa
 # libopcodes
 TARGETS_LIBOPCODES_INTEL = libopcodes_x86.so libopcodes_x64.so
 TARGETS_LIBOPCODES_ARM = libopcodes_arm_unknown.so libopcodes_arm_2.so libopcodes_arm_2a.so libopcodes_arm_3.so libopcodes_arm_3m.so libopcodes_arm_4.so libopcodes_arm_4t.so libopcodes_arm_5.so libopcodes_arm_5t.so libopcodes_arm_5te.so libopcodes_arm_xscale.so libopcodes_arm_ep9312.so libopcodes_arm_iwmmxt.so libopcodes_arm_iwmmxt2.so
+TARGETS_LIBOPCODES_THUMB = libopcodes_thumb_unknown.so
 TARGETS_LIBOPCODES_AARCH64 = libopcodes_aarch64.so libopcodes_aarch64_ilp32.so
 TARGETS_LIBOPCODES_PPC = libopcodes_ppc.so libopcodes_ppc64.so libopcodes_ppc_403.so libopcodes_ppc_403gc.so libopcodes_ppc_405.so libopcodes_ppc_505.so libopcodes_ppc_601.so libopcodes_ppc_602.so libopcodes_ppc_603.so libopcodes_ppc_ec603e.so libopcodes_ppc_604.so libopcodes_ppc_620.so libopcodes_ppc_630.so libopcodes_ppc_750.so libopcodes_ppc_860.so libopcodes_ppc_a35.so libopcodes_ppc_rs64ii.so libopcodes_ppc_rs64iii.so libopcodes_ppc_7400.so libopcodes_ppc_e500.so libopcodes_ppc_e500mc.so libopcodes_ppc_e500mc64.so libopcodes_ppc_e5500.so libopcodes_ppc_e6500.so libopcodes_ppc_titan.so libopcodes_ppc_vle.so
 TARGETS_LIBOPCODES_SH4 = libopcodes_sh4.so
@@ -36,7 +37,7 @@ TARGETS_BINJA_MIPS = binja_mips32.so
 
 TARGETS_INTEL = $(TARGETS_LIBOPCODES_INTEL) $(TARGETS_CAPSTONE_INTEL) $(TARGETS_BINJA_INTEL)
 TARGETS_ARM = $(TARGETS_LIBOPCODES_ARM) $(TARGETS_CAPSTONE_ARM) $(TARGETS_LLVM_ARM) $(TARGETS_BINJA_ARM)
-TARGETS_THUMB = $(TARGETS_CAPSTONE_THUMB) $(TARGETS_LLVM_THUMB) $(TARGETS_BINJA_THUMB)
+TARGETS_THUMB = $(TARGETS_LIBOPCODES_THUMB) $(TARGETS_CAPSTONE_THUMB) $(TARGETS_LLVM_THUMB) $(TARGETS_BINJA_THUMB)
 TARGETS_AARCH64 = $(TARGETS_LIBOPCODES_AARCH64) $(TARGETS_CAPSTONE_AARCH64) $(TARGETS_LLVM_AARCH64) $(TARGETS_BINJA_AARCH64)
 TARGETS_PPC = $(TARGETS_PPCD_PPC) $(TARGETS_LIBOPCODES_PPC) $(TARGETS_CAPSTONE_PPC) $(TARGETS_BINJA_PPC)
 TARGETS_MIPS = $(TARGETS_BINJA_MIPS)
@@ -248,6 +249,11 @@ libopcodes_arm_iwmmxt.so: libopcodes.cpp utils.o
 
 libopcodes_arm_iwmmxt2.so: libopcodes.cpp utils.o
 	g++ $(CPPFLAGS) $(BFDFLAGS) utils.o -DARM_IWMMXT2 -shared -o libopcodes_arm_iwmmxt2.so libopcodes.cpp
+
+# thumb
+
+libopcodes_thumb_unknown.so: libopcodes.cpp utils.o
+	g++ $(CPPFLAGS) $(BFDFLAGS) utils.o -DTHUMB_UNKNOWN -shared -o libopcodes_thumb_unknown.so libopcodes.cpp
 
 # aarch64
 

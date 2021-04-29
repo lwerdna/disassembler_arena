@@ -77,6 +77,7 @@ map<struct architecture_machine_pair, disassembler_ftype> am2df;
 int disasm_libopcodes(
 	enum bfd_architecture arch,
 	uint32_t mach,
+	const char *options,
 	uint64_t addr,
 	uint8_t *data,
 	int len,
@@ -101,9 +102,11 @@ int disasm_libopcodes(
 		init_disassemble_info(&dinfo, NULL, cb_fprintf);
 		dinfo.arch = arch;
 		dinfo.mach = mach;
-		dinfo.endian = BFD_ENDIAN_BIG;
-		dinfo.endian_code = BFD_ENDIAN_BIG;
-		dinfo.display_endian = BFD_ENDIAN_BIG;
+		dinfo.disassembler_options = options;
+
+		dinfo.endian = BFD_ENDIAN_LITTLE;
+		dinfo.endian_code = BFD_ENDIAN_LITTLE;
+		dinfo.display_endian = BFD_ENDIAN_LITTLE;
 
 		/* read dinfo.arch and populate further defaults, see <binutils>/opcodes/disassemble.c */
 		disassemble_init_for_target(&dinfo);
@@ -163,6 +166,9 @@ extern "C" int disassemble(uint64_t addr, uint8_t *data, int len, char *result)
 	int rc = -1;
 	enum bfd_architecture arch;
 	int machine;
+	const char *options = NULL;
+
+	/* bfd_arch_XXX, bfd_mach_XXX from binutils/bfd/bfd.h */
 
 	#if defined(X86)
 	arch = bfd_arch_i386;
@@ -215,6 +221,11 @@ extern "C" int disassemble(uint64_t addr, uint8_t *data, int len, char *result)
 	arch = bfd_arch_arm;
 	machine = bfd_mach_arm_iWMMXt2;
 
+
+	#elif defined(THUMB_UNKNOWN)
+	arch = bfd_arch_arm;
+	machine = bfd_mach_arm_unknown;
+	options = "force-thumb";
 
 	#elif defined(AARCH64)
 	arch = bfd_arch_aarch64;
@@ -308,6 +319,6 @@ extern "C" int disassemble(uint64_t addr, uint8_t *data, int len, char *result)
 	machine = bfd_mach_sh4;
 	#endif
 
-	rc = disasm_libopcodes(arch, machine, addr, data, len, result);
+	rc = disasm_libopcodes(arch, machine, options, addr, data, len, result);
 	return rc;
 }
