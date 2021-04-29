@@ -92,7 +92,7 @@ extern "C" int disassemble(uint64_t addr, uint8_t *data, int len, char *result)
 {
 	int rc = -1;
 	LLVMDisasmContextRef context;
-	const char *triplet, *features;
+	const char *triplet=NULL, *features=NULL;
 	bool initialized = false;
 	size_t instr_len;
 
@@ -155,6 +155,11 @@ extern "C" int disassemble(uint64_t addr, uint8_t *data, int len, char *result)
 
 	/* done */
 	#endif
+
+	if(!triplet || !features) {
+		printf("ERROR: triplet or features not set, did you define the arch?\n");
+		goto cleanup;
+	}
 
 	if(!initialized) {
 		LLVMInitializeAllTargetInfos();

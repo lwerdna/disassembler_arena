@@ -303,7 +303,7 @@ llvm_arm_v8_all.so: llvm.cpp utils.o
 # thumb
 
 llvm_thumb.so: llvm.cpp utils.o
-	g++ $(CPPFLAGS) $(LLVM_COMPILE_FLAGS) $(LLVM_LINK_FLAGS) utils.o -DARM_THUMB -shared -o llvm_thumb.so llvm.cpp
+	g++ $(CPPFLAGS) $(LLVM_COMPILE_FLAGS) $(LLVM_LINK_FLAGS) utils.o -DARM_THUMB_V8_5A -shared -o llvm_thumb.so llvm.cpp
 
 # aarch64
 
@@ -362,7 +362,7 @@ binja_mips32.so: binaryninja.cpp
 # misc
 #------------------------------------------------------------------------------
 utils.o: utils.cpp
-	g++ -c utils.cpp -o utils.o
+	g++ $(CPPFLAGS) -c utils.cpp -o utils.o
 
 call_so: call_so.c
-	gcc call_so.c -o call_so
+	gcc $(CPPFLAGS) call_so.c -o call_so
