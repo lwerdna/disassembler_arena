@@ -155,6 +155,12 @@ int disasm_libopcodes(
 		needs to access it */
 	dinfo.private_data = data;
 
+	if(0) {
+		printf("%s disassembling: ", __FILE__);
+		for(int i=0; i<len; ++i)
+			printf("%02X ", data[i]);
+		printf("\n");
+	}
 	result[0] = '\0';
 	disasm((bfd_vma)addr, &dinfo);
 

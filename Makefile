@@ -365,4 +365,4 @@ utils.o: utils.cpp
 	g++ $(CPPFLAGS) -c utils.cpp -o utils.o
 
 call_so: call_so.c
-	gcc $(CPPFLAGS) call_so.c -o call_so
+	gcc -O0 -g call_so.c -o call_so

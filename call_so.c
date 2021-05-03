@@ -20,8 +20,8 @@ int main(int ac, char **av)
 {
 	int rc = -1;
 	char distxt[128] = {'\0'};
-	unsigned char bytes[4] = {0xc0, 0x62, 0xb9, 0xf3};
-	//unsigned char bytes[4] = {0xf3, 0xb9, 0x62, 0xc0};
+	unsigned char data[4] = {0xc0, 0x62, 0xb9, 0xf3};
+	//unsigned char data[4] = {0xf3, 0xb9, 0x62, 0xc0};
 
 
 	char *pathso = av[1];
@@ -41,12 +41,19 @@ int main(int ac, char **av)
 	}
 
 	uint64_t addr = strtol(av[2], 0, 16);
-	int n_bytes = ac-3;
-	for(int i=0; i<n_bytes; ++i) {
-		bytes[i] = strtol(av[i+3], 0, 16) & 0xFF;
+	int len = ac-3;
+	for(int i=0; i<len; ++i) {
+		data[i] = strtol(av[i+3], 0, 16) & 0xFF;
 	}
 
-	rc = disassemble(addr, bytes, 4, distxt);
+	if(0) {
+		printf("%s sending address 0x%llX: ", __FILE__, addr);
+		for(int i=0; i<len; ++i)
+			printf("%02X ", data[i]);
+		printf("\n");
+	}
+
+	rc = disassemble(addr, data, len, distxt);
 	if(rc >= 0)
 		printf("%s", distxt);
 	else

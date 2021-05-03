@@ -53,7 +53,7 @@ cs_mode mode = (cs_mode)(CS_MODE_64);
 cs_arch arch = (cs_arch)CS_ARCH_X86;
 #endif
 
-extern "C" int disassemble(uint64_t addr_, uint8_t *data, int len, char *result)
+extern "C" int disassemble(uint64_t addr_, uint8_t *data, size_t data_len, char *result)
 {
 	int rc = -1;
 
@@ -72,10 +72,16 @@ extern "C" int disassemble(uint64_t addr_, uint8_t *data, int len, char *result)
 
 	/* actually disassemble */
 	uint64_t addr = addr_;
-	size_t size = 4;
-	const uint8_t *pinsword = data;
 
-	size_t count = cs_disasm_iter(handle, &pinsword, &size, &addr, insn);
+	if(0) {
+		printf("%s disassembling 0x%016llx: ", __FILE__, addr);
+		for(int i=0; i<data_len; ++i)
+			printf("%02X ", data[i]);
+		printf("\n");
+	}
+
+	const uint8_t *tmp = data;
+	size_t count = cs_disasm_iter(handle, &tmp, &data_len, &addr, insn);
 	if(count != 1) {
 		if(cs_errno(handle) == CS_ERR_OK) {
 			if(result)
