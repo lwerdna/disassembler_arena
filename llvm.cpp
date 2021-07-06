@@ -22,7 +22,7 @@ using namespace std;
 #include <llvm/MC/MCSectionMachO.h>
 #include <llvm/MC/MCSubtargetInfo.h>
 #include <llvm/MC/MCParser/MCTargetAsmParser.h>
-#include <llvm/MC/MCTargetOptionsCommandFlags.inc>
+//#include <llvm/MC/MCTargetOptionsCommandFlags.inc>
 #include <llvm/MC/MCParser/AsmLexer.h>
 
 #include <llvm/Support/CommandLine.h>

@@ -17,9 +17,9 @@ def disasm(sopath, data, addr=0):
 	return tmp
 
 if __name__ == '__main__':
-	arch = sys.argv[1]
+	arch = (sys.argv[1:] and sys.argv[1]) or 'all'
 
-	if arch in ['aarch64', 'arm64']:
+	if arch in ['aarch64', 'arm64', 'all']:
 		# 1f 20 03 d5 is little-endian instruction word 0xd503201f is nop in aarch64
 		assert disasm('libopcodes_aarch64.so', b'\x1f\x20\x03\xd5') == 'nop'
 		assert disasm('libopcodes_aarch64_ilp32.so', b'\x1f\x20\x03\xd5') == 'nop'
@@ -28,9 +28,10 @@ if __name__ == '__main__':
 
 		# this is stz2g v8.5 memory tagging feature, earlier versions should fail
 		# D9FFF7FF "stz2g.."
-		assert disasm('llvm_aarch64_all.so', b'\xff\xf7\xff\xd9') == 'stz2g sp, [sp], #-16'
+		result = disasm('llvm_aarch64_all.so', b'\xff\xf7\xff\xd9')
+		assert result == 'stz2g sp, [sp], #-0x10', f'got wrong result: {result}'
 
-	if arch in ['thumb', 'thumb2']:
+	if arch in ['thumb', 'thumb2', 'all']:
 		# 00 bf is little-endian instruction word 0xbf00 is 16-bit nop in thumb
 		assert disasm('binja_thumb2.so', b'\x00\xbf') == 'nop'
 		assert disasm('capstone_arm_thumb.so', b'\x00\xbf') == 'nop'

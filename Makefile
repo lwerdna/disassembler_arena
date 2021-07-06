@@ -333,9 +333,9 @@ llvm_aarch64_all.so: llvm.cpp utils.o
 #------------------------------------------------------------------------------
 
 BINJA_API ?= /path/to/api # from https://github.com/Vector35/binaryninja-api
-BINJA_APP ?= /path/to/app # eg: /Applications/Binary\ Ninja.app
-BINJA_COMPILE_FLAGS = -I$(BINJA_API) -DPATH_BUNDLED_PLUGINS='"$(BINJA_APP)/Contents/MacOS/plugins"'
-BINJA_LINK_FLAGS = -L$(BINJA_APP)/Contents/MacOS -Wl,-rpath,$(BINJA_APP)/Contents/MacOS -lbinaryninjacore
+BN_INSTALL_DIR ?= /path/to/binja_app # eg: /Applications/Binary\ Ninja.app
+BINJA_COMPILE_FLAGS = -I$(BINJA_API) -DPATH_BUNDLED_PLUGINS='"$(BN_INSTALL_DIR)/Contents/MacOS/plugins"'
+BINJA_LINK_FLAGS = -L$(BN_INSTALL_DIR)/Contents/MacOS -Wl,-rpath,$(BN_INSTALL_DIR)/Contents/MacOS -lbinaryninjacore
 
 binja_x86.so: binaryninja.cpp
 	g++ -DX86 $(CPPFLAGS) $(BINJA_COMPILE_FLAGS) binaryninja.cpp $(BINJA_LINK_FLAGS) -shared -o binja_x86.so
