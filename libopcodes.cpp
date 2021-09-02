@@ -39,10 +39,11 @@ int read_memory_dword_swap(bfd_vma memaddr, bfd_byte *myaddr, unsigned int lengt
 	struct disassemble_info *dinfo)
 {
 	//printf("custom_read_memory(addr=0x%lX, length=%d)\n", memaddr, length);
-	//printf("source_bytes: %02X %02X %02X %02X\n", source_bytes[0], source_bytes[1], source_bytes[2], source_bytes[3]);
 
 	/* we stuffed this here during disassembler setup */
-	uint8_t *source_bytes = (uint8_t *)dinfo->private_data;
+	uint8_t *source_bytes = (uint8_t *)dinfo->buffer;
+
+	//printf("source_bytes: %02X %02X %02X %02X\n", source_bytes[0], source_bytes[1], source_bytes[2], source_bytes[3]);
 
 	memcpy(myaddr, source_bytes, length);
 	bswap32_mem(myaddr, length);
@@ -153,7 +154,9 @@ int disasm_libopcodes(
 
 	/* also store source data in .private_data in case custom .read_memory_func
 		needs to access it */
-	dinfo.private_data = data;
+	//dinfo.private_data = data;
+	/* NO! dinfo.private_data has set structure
+	 * eg: for ARM, it's a pointer to struct arm_private_data with features and shit */
 
 	if(0) {
 		printf("%s disassembling: ", __FILE__);

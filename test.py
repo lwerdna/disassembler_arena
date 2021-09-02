@@ -42,4 +42,10 @@ if __name__ == '__main__':
 		assert disasm('capstone_arm_thumb.so', b'\xaf\xf3\x00\x80') == 'nop.w'
 		assert disasm('llvm_thumb.so', b'\xaf\xf3\x00\x80') == 'nop.w'
 
+	if arch in ['arm', 'all']:
+		assert disasm('binja_armv7.so', b'\x00\xf0\x20\xe3') == 'nop'
+		assert disasm('capstone_arm_v8.so', b'\x00\xf0\x20\xe3') == 'nop'
+		assert disasm('llvm_arm_v8_all.so', b'\x00\xf0\x20\xe3') == 'nop'
+		assert disasm('libopcodes_arm_unknown.so', b'\x00\xf0\x20\xe3') == 'nop {0}'
+
 	print('passed')

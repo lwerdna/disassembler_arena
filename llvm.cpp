@@ -127,6 +127,9 @@ extern "C" int disassemble(uint64_t addr, uint8_t *data, int len, char *result)
 	#elif defined(ARM_THUMB_V8_5A)
 	triplet = "thumbv7-none-gnueabi";
 	features = "+v8.5a";
+	//features =
+	//	"+v8.5a,+crc,+crypto,+dotprod,+fp-armv8,+fp16fml,"
+	//	"+fullfp16,+neon,+ras,+sb";
 	/* 64-bit / AARCH64 */
 	#elif defined(AARCH64_ARMV8)
 	triplet = "aarch64-none-elf";
