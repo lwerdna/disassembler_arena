@@ -1,5 +1,5 @@
 CPPFLAGS =
-CPPFLAGS += -std=c++11 -O0 -g
+CPPFLAGS += -std=c++17 -O0 -g
 BFDFLAGS = -lbfd -liberty -lopcodes -lz
 
 .PHONY: all
@@ -334,7 +334,7 @@ llvm_aarch64_all.so: llvm.cpp utils.o
 
 BINJA_API ?= /path/to/api # from https://github.com/Vector35/binaryninja-api
 BN_INSTALL_DIR ?= /path/to/binja_app # eg: /Applications/Binary\ Ninja.app
-BINJA_COMPILE_FLAGS = -I$(BINJA_API) -DPATH_BUNDLED_PLUGINS='"$(BN_INSTALL_DIR)/Contents/MacOS/plugins"'
+BINJA_COMPILE_FLAGS = -I$(BN_API_PATH) -DPATH_BUNDLED_PLUGINS='"$(BN_INSTALL_DIR)/Contents/MacOS/plugins"'
 BINJA_LINK_FLAGS = -L$(BN_INSTALL_DIR)/Contents/MacOS -Wl,-rpath,$(BN_INSTALL_DIR)/Contents/MacOS -lbinaryninjacore
 
 binja_x86.so: binaryninja.cpp
