@@ -34,6 +34,8 @@ if __name__ == '__main__':
 	pfunc = dll.disassemble
 	pfunc.restype = c_int
 	pfunc.argtypes = [c_uint64, c_char_p, c_uint, c_void_p]
+	print('sopath:', sopath)
+	print('dll:', dll)
 	#print('addr: 0x%X' % addr)
 	#print('data_bytes:', data_bytes)
 	#print('len(data):', len(data_bytes))

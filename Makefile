@@ -35,14 +35,18 @@ TARGETS_BINJA_AARCH64 = binja_aarch64.so
 TARGETS_BINJA_PPC = binja_ppc.so
 TARGETS_BINJA_MIPS = binja_mips32.so
 
+# qemu
+TARGET_QEMU_NANOMIPS = qemu_nanomips.so
+
 TARGETS_INTEL = $(TARGETS_LIBOPCODES_INTEL) $(TARGETS_CAPSTONE_INTEL) $(TARGETS_BINJA_INTEL)
 TARGETS_ARM = $(TARGETS_LIBOPCODES_ARM) $(TARGETS_CAPSTONE_ARM) $(TARGETS_LLVM_ARM) $(TARGETS_BINJA_ARM)
 TARGETS_THUMB = $(TARGETS_LIBOPCODES_THUMB) $(TARGETS_CAPSTONE_THUMB) $(TARGETS_LLVM_THUMB) $(TARGETS_BINJA_THUMB)
 TARGETS_AARCH64 = $(TARGETS_LIBOPCODES_AARCH64) $(TARGETS_CAPSTONE_AARCH64) $(TARGETS_LLVM_AARCH64) $(TARGETS_BINJA_AARCH64)
 TARGETS_PPC = $(TARGETS_PPCD_PPC) $(TARGETS_LIBOPCODES_PPC) $(TARGETS_CAPSTONE_PPC) $(TARGETS_BINJA_PPC)
 TARGETS_MIPS = $(TARGETS_BINJA_MIPS)
+TARGETS_NANOMIPS = $(TARGETS_QEMU_NANOMIPS)
 
-all: $(TARGETS_INTEL) $(TARGETS_ARM) $(TARGETS_AARCH64) $(TARGETS_PPC) $(TARGETS_MIPS) call_so
+all: $(TARGETS_INTEL) $(TARGETS_ARM) $(TARGETS_AARCH64) $(TARGETS_PPC) $(TARGETS_MIPS) $(TARGET_NANOMIPS) call_so
 
 intel: $(TARGETS_INTEL) call_so
 
@@ -57,6 +61,8 @@ ppc: $(TARGETS_PPC) call_so
 mips: $(TARGETS_MIPS) call_so
 
 sh4: $(TARGETS_LIBOPCODES_SH4) call_so
+
+nanomips: $(TARGET_NANOMIPS) call_so
 
 clean:
 	rm -rf *.so *.o *.dSYM
@@ -357,6 +363,17 @@ binja_aarch64.so: binaryninja.cpp
 
 binja_mips32.so: binaryninja.cpp
 	g++ -DMIPS32 $(CPPFLAGS) $(BINJA_COMPILE_FLAGS) binaryninja.cpp $(BINJA_LINK_FLAGS) -shared -o binja_mips32.so
+
+#------------------------------------------------------------------------------
+# QEMU
+#------------------------------------------------------------------------------
+
+QEMU_LOCATION ?= $(HOME)/Downloads/qemu-8.0.0
+QEMU_COMPILE_FLAGS = -I$(QEMU_LOCATION)/include -I$(QEMU_LOCATION)/build
+QEMU_LINK_FLAGS = $(QEMU_LOCATION)/build/libcommon.fa.p/disas_nanomips.c.o -lglib-2.0
+
+qemu_nanomips.so: qemu.c
+	gcc $(QEMU_COMPILE_FLAGS) qemu.c $(QEMU_LINK_FLAGS) -shared -o qemu_nanomips.so
 
 #------------------------------------------------------------------------------
 # misc

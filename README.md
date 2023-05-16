@@ -58,3 +58,13 @@ ppcd_gecko.so                    AABBCCDD: lha r21, -0x3323 (r27)        DDCCBBA
 ppcd_powerpc_32.so               AABBCCDD: lha r21, -0x3323 (r27)        DDCCBBAA: stfdu fr14, -0x4456 (r12)
 ppcd_powerpc_64.so               AABBCCDD: lha r21, -0x3323 (r27)        DDCCBBAA: stfdu fr14, -0x4456 (r12)
 ```
+
+## qemu nanomips instructions
+
+```
+get qemu: https://download.qemu.org/qemu-8.0.0.tar.xz
+./configure
+edit qemu-8.0.0/disas/nanomips.c and remove "static" from nanomips_dis()
+make
+```
+
