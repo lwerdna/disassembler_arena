@@ -11,7 +11,7 @@ def disasm(sopath, data, addr=0):
 	cmdline = ['call_so', sopath, hex(addr)]
 	for byte in data:
 		cmdline.append(hex(byte))
-	print(cmdline)
+	#print(cmdline)
 	process = Popen(cmdline, stdout=PIPE, stderr=PIPE)
 	(stdout, stderr) = process.communicate()
 	stdout = stdout.decode("utf-8")

@@ -27,17 +27,17 @@ bool nanomips_dis(const uint16_t *data, char **buf, Dis_info *info);
 
 int disassemble(uint64_t addr, uint8_t *data, int len, char *result)
 {
+	char *distxt;
+
 	Dis_info dinfo;
 	memset(&dinfo, 0, sizeof(dinfo));
 	dinfo.m_pc = addr;
 	dinfo.fprintf_func = fprintf;
 	dinfo.stream = stdout;
 
-	printf("A\n");
-	nanomips_dis((uint16_t *)data, (char **)addr, &dinfo);
-	printf("B\n");
+	nanomips_dis((uint16_t *)data, &distxt, &dinfo);
 
-	strcpy(result, "yomomma");
+	strcpy(result, distxt);
 
 	return 0;
 }
